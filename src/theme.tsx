@@ -44,7 +44,7 @@ const theme = createTheme({
             fontFamily: "'League_Spartan'",
             fontWeight: '800',
             fontSize: '1.3rem',
-            lineHeight: '1rem',
+            lineHeight: '1.2rem',
             textTransform: 'uppercase',
         },
         avatarbody: {
@@ -52,7 +52,7 @@ const theme = createTheme({
             fontFamily: "'Montserrat'",
             fontWeight: '300',
             fontSize: '1rem',
-            lineHeight: '1rem',
+            lineHeight: '1.2rem',
         },
         h2: {
             color: 'rgba(0,0,0,.7)',
@@ -68,6 +68,11 @@ const theme = createTheme({
             fontSize: '2.2rem',
             textTransform: 'uppercase',
             letterSpacing: '-1px'
+        },
+        h6: {
+            fontFamily: "'League_Spartan'",
+            fontWeight: '700',
+            color: 'rgba(0,0,0,.7)'
         },
         subtitle1: {
             color: palette.primary.light,
@@ -190,6 +195,55 @@ const theme = createTheme({
                         '& .MuiTypography-root': { color: '#593202 !important', }
                     }),
                 })
+            }
+        },
+        MuiTableSortLabel: {
+            styleOverrides: {
+                root: {
+                    fontFamily: "'Montserrat'",
+                    fontWeight: 700,
+                    color: 'rgba(0, 0, 0, .7) !important'
+                }
+            }
+        },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    fontFamily: "'Montserrat'",
+                    fontWeight: 400,
+                }
+            }
+        },
+        MuiTablePagination: {
+            styleOverrides: {
+                root: {
+                    '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
+                        fontFamily: "'Montserrat'",
+                        fontWeight: 700,
+                        color: 'rgba(0, 0, 0, .7) !important',
+                        pointerEvents: 'none',
+                        userSelect: 'none'
+                    },
+                    '& input': {
+                        fontFamily: "'Montserrat'",
+                    }
+                }
+            }
+        },
+        MuiButton: {
+            styleOverrides: {
+                contained: {
+                    fontFamily: "'League_Spartan'",
+                    fontWeight: '800',
+                    lineHeight: '1rem',
+                    padding: '17px 50px 14px',
+                    background: palette.secondary.light,
+                    color: 'black',
+                    transition: 'background .2s ease-in-out, color .2s ease-in-out',
+                    '&:hover': {
+                        background: '#F28F29',
+                    }
+                }
             }
         }
     }

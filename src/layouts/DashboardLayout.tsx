@@ -38,7 +38,10 @@ const BoxOutletContent = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: '20px'
+    paddingTop: '20px',
+    [theme.breakpoints.down('md')]: {
+        padding: '10px 5%',
+    }
 }))
 
 const RealContentContainer = styled(Box)(({ theme }) => ({

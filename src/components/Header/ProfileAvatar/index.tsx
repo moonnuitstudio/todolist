@@ -76,7 +76,7 @@ const ProfileAvatar = () => {
                 onClose={handleCloseUserMenu}
             >
                 <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">Profile</Typography>
+                    <Typography textAlign="center">Log Out</Typography>
                 </MenuItem>
             </AvatarSubMenu>
         </>
