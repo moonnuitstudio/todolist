@@ -11,7 +11,8 @@ import TableRow from '@mui/material/TableRow'
 
 import IconButton from '@mui/material/IconButton'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
-
+import TaskAltIcon from '@mui/icons-material/TaskAlt'
+import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye'
 
 import Paper from '@mui/material/Paper'
 import Checkbox from '@mui/material/Checkbox'
@@ -176,9 +177,12 @@ export default function ToDoTable() {
                                 >
                                 {row.title}
                                 </TableCell>
-                                <TableCell align="left" style={{ width: 300 }} >{row.project}</TableCell>
+                                <TableCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 300 }} >{row.project}</TableCell>
                                 <TableCell align="left" style={{ width: 160 }} >{row.due}</TableCell>
                                 <TableCell align="right" style={{ width: 160 }} >
+                                    <IconButton aria-label="delete">
+                                        <PanoramaFishEyeIcon />
+                                    </IconButton>
                                     <IconButton aria-label="delete">
                                         <StarBorderIcon />
                                     </IconButton>
