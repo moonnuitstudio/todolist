@@ -9,18 +9,31 @@ import Typography from '@mui/material/Typography'
 
 import ProfileAvatar from './ProfileAvatar'
 
-const SpanList = styled('span')(() => ({
+const SpanList = styled('span')(({ theme }) => ({
     color: 'black',
-    fontSize: '1.5rem'
+    fontSize: '1.5rem',
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '1.2rem',
+    }
 }))
 
-const Header = () => {
+const HeaderTypography = styled(Typography)(({ theme }) => ({
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '2rem',
+    }
+}))
+
+interface HeaderType {
+    appref: React.RefObject<HTMLElement>;
+}
+
+const Header = ({ appref }:HeaderType) => {
     return (
-        <AppBar position="static" elevation={0} sx={{ background: 'transparent' }}>
+        <AppBar ref={appref} position="static" elevation={0} sx={{ background: 'transparent' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h3">To Do <SpanList>List</SpanList></Typography>
+                        <HeaderTypography variant="h3">To Do <SpanList>List</SpanList></HeaderTypography>
                     </Box>
                     <ProfileAvatar />
                 </Toolbar>

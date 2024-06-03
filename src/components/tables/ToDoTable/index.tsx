@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { styled } from '@mui/system'
+
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -9,21 +11,26 @@ import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 
-import IconButton from '@mui/material/IconButton'
-import StarBorderIcon from '@mui/icons-material/StarBorder'
-import TaskAltIcon from '@mui/icons-material/TaskAlt'
-import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye'
-
 import Paper from '@mui/material/Paper'
-import Checkbox from '@mui/material/Checkbox'
 
-import { TableTaskType, createTableTask } from '../../../modes/Task'
+import { TableTaskType, createTableTask } from '../../../models/Task'
 
 import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToolbar'
 
-import { useResizeDetector } from 'react-resize-detector'
+import ToDoRow from './ToDoRow'
 
+import { useResizeDetector } from 'react-resize-detector'
+import useResponsive from '../../../hooks/useResponsive'
+
+const ToDoTableBody = styled(Table)(({ theme }) => ({
+    minWidth: 750,
+    [theme.breakpoints.down('sm')]: {
+        minWidth: 0,
+    }
+}))
+
+// ------------------------------------------------------------------
 type Order = 'asc' | 'desc';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -59,18 +66,36 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 
 const rows = [
     createTableTask(1, 'Cupcake', '02/21/2024', false, 'default', false),
+    createTableTask(2, 'Cupcake 1', '02/21/2024', false, 'default', false),
+    createTableTask(3, 'Cupcake 2', '02/21/2024', false, 'default', false),
+    createTableTask(4, 'Cupcake 3', '02/21/2024', false, 'default', false),
+    createTableTask(5, 'Cupcake 4', '02/21/2024', false, 'default', false),
+    createTableTask(6, 'Cupcake 5', '02/21/2024', false, 'default', false),
+    createTableTask(7, 'Cupcake 6', '02/21/2024', false, 'default', false),
+    createTableTask(8, 'Cupcake 7', '02/21/2024', false, 'default', false),
+    createTableTask(9, 'Cupcake 8', '02/21/2024', false, 'default', false),
+    createTableTask(10, 'Cupcake 9', '02/21/2024', false, 'default', false),
 ];
 
-export default function ToDoTable() {
+interface ToDoTablePropsType {
+    containerheight: number | undefined
+}
+
+export default function ToDoTable({ containerheight } : ToDoTablePropsType ) {
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState<keyof TableTaskType>('title');
     const [selected, setSelected] = React.useState<readonly number[]>([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { height: tableBoxHeight, ref: tableBoxRef } = useResizeDetector();
+    const { isMobile } = useResponsive()
+    //
+    const tableHeight = React.useMemo(() => {
 
-    const tableHeight = React.useMemo(() => tableBoxHeight? tableBoxHeight - 250: 400, [tableBoxHeight])
+        if (isMobile) return containerheight? containerheight - 140: 200
+
+        return containerheight? containerheight - 250: 400
+    }, [containerheight, isMobile])
 
     const handleRequestSort = ( event: React.MouseEvent<unknown>, property: keyof TableTaskType) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -126,92 +151,49 @@ export default function ToDoTable() {
     );
 
     return (
-        <Box ref={tableBoxRef} sx={{ width: '100%'}}>
-            <Paper sx={{ width: '100%', mb: 2, background: 'transparent', boxShadow: 'none !important' }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
-                <TableContainer sx={{ maxHeight: tableHeight }}>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size={'medium'}
-                        stickyHeader 
-                    >
-                        <EnhancedTableHead
-                        numSelected={selected.length}
-                        order={order}
-                        orderBy={orderBy}
-                        onSelectAllClick={handleSelectAllClick}
-                        onRequestSort={handleRequestSort}
-                        rowCount={rows.length}
-                        />
-                        <TableBody>
-                        {visibleRows.map((row, index) => {
-                            const isItemSelected = isSelected(row.id);
-                            const labelId = `enhanced-table-checkbox-${index}`;
+        <Paper sx={{ width: '100%', mb: 2, background: 'transparent', boxShadow: 'none !important' }}>
+            <EnhancedTableToolbar numSelected={selected.length} />
+            <TableContainer sx={{ maxHeight: tableHeight }}>
+                <ToDoTableBody
+                    aria-labelledby="tableTitle"
+                    size={'medium'}
+                    stickyHeader 
+                >
+                    <EnhancedTableHead
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={rows.length}
+                    />
+                    <TableBody>
+                    {visibleRows.map((row, index) => {
+                        const isItemSelected = isSelected(row.id);
 
-                            return (
-                            <TableRow
-                                hover
-                                role="checkbox"
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                key={row.id}
-                                selected={isItemSelected}
-                                sx={{ cursor: 'pointer' }}
-                            >
-                                <TableCell padding="checkbox">
-                                <Checkbox
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputProps={{
-                                    'aria-labelledby': labelId,
-                                    }}
-                                    onClick={(event) => handleClick(event, row.id)}
-                                />
-                                </TableCell>
-                                <TableCell
-                                component="th"
-                                id={labelId}
-                                scope="row"
-                                padding="none"
-                                >
-                                {row.title}
-                                </TableCell>
-                                <TableCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 300 }} >{row.project}</TableCell>
-                                <TableCell align="left" style={{ width: 160 }} >{row.due}</TableCell>
-                                <TableCell align="right" style={{ width: 160 }} >
-                                    <IconButton aria-label="delete">
-                                        <PanoramaFishEyeIcon />
-                                    </IconButton>
-                                    <IconButton aria-label="delete">
-                                        <StarBorderIcon />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                            );
-                        })}
-                        {emptyRows > 0 && (
-                            <TableRow
-                            style={{
-                                height: (53) * emptyRows,
-                            }}
-                            >
-                            <TableCell colSpan={6} />
-                            </TableRow>
-                        )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
+                        return (<ToDoRow key={row.id} isItemSelected={isItemSelected} labelId={`enhanced-table-checkbox-${index}`} row={row} handleClick={handleClick} />);
+                    })}
+                    {emptyRows > 0 && (
+                        <TableRow
+                        style={{
+                            height: (53) * emptyRows,
+                        }}
+                        >
+                        <TableCell colSpan={6} />
+                        </TableRow>
+                    )}
+                    </TableBody>
+                </ToDoTableBody>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={isMobile? [] : [5, 10, 25]}
                 component="div"
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Paper>
-        </Box>
+            />
+        </Paper>
     );
 }

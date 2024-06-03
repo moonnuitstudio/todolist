@@ -1,5 +1,5 @@
 
-import { createTableTask } from "../modes/Task"
+import { createTableTask } from "../models/Task"
 
 const rows = [
     createTableTask(1, 'Cupcake', '02/21/2024', false, 'default', false),

@@ -1,3 +1,6 @@
+import { useMemo } from 'react'
+import { styled } from '@mui/system'
+
 import Box from '@mui/material/Box'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
@@ -7,7 +10,9 @@ import Checkbox from '@mui/material/Checkbox'
 
 import { visuallyHidden } from '@mui/utils';
 
-import { TableTaskType, tableTaskHeadCells } from '../../../../modes/Task';
+import { TableTaskType, tableTaskHeadCells } from '../../../../models/Task';
+
+import useResponsive from '../../../../hooks/useResponsive'
 
 type Order = 'asc' | 'desc';
 
@@ -24,10 +29,18 @@ const EnhancedTableHead = ({ onSelectAllClick, order, orderBy, numSelected, rowC
 
     const createSortHandler = (property: keyof TableTaskType) => (event: React.MouseEvent<unknown>) => { onRequestSort(event, property); };
 
+    const { isMobile } = useResponsive()
+
+    const headCells = useMemo(() => {
+        if (isMobile) return tableTaskHeadCells.slice(0, 1)
+
+        return tableTaskHeadCells
+    }, [isMobile])
+
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
+                {!isMobile && (<TableCell padding="checkbox">
                     <Checkbox
                         color="primary"
                         indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -35,8 +48,8 @@ const EnhancedTableHead = ({ onSelectAllClick, order, orderBy, numSelected, rowC
                         onChange={onSelectAllClick}
                         inputProps={{ 'aria-label': 'select all task' }}
                     />
-                </TableCell>
-                {tableTaskHeadCells.map((headCell) => (
+                </TableCell>)}
+                {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
                         align={headCell.numeric ? 'right' : 'left'}

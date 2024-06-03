@@ -1,20 +1,25 @@
 import { styled } from '@mui/system'
 
-import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
 
 import ToDoTable from '../components/tables/ToDoTable'
 
-const DashContainer = styled(Container)(() => ({
+import { useResizeDetector } from 'react-resize-detector'
+
+const DashContainer = styled(Box)(() => ({
   width: '100%',
   height: '100%',
-  padding: '30px'
+  flexGrow: 1,
 }))
 
 const DashboardPage = () => {
+
+  const { ref: containerRef, height: containerHeight } = useResizeDetector()
+
   return (
-    <>
-      <ToDoTable />
-    </>
+    <DashContainer ref={containerRef}>
+      <ToDoTable containerheight={containerHeight} />
+    </DashContainer>
   )
 }
 

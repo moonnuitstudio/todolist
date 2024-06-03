@@ -11,6 +11,12 @@ const HeaderPage = styled('header')(() => ({
     alignItems: 'flex-start'
 }))
 
+const HeaderTypography = styled(Typography)(({ theme }) => ({
+    [theme.breakpoints.down("sm")]: {
+        display: 'none !important'
+    }
+}))
+
 interface PageHeaderInfoType {
     title: string;
 }
@@ -18,7 +24,7 @@ interface PageHeaderInfoType {
 const PageHeaderInfo = ({ title }:PageHeaderInfoType) => {
      return (
         <HeaderPage>
-            <Typography variant='h2' sx={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: '1px' }}>{title}</Typography>
+            <HeaderTypography variant='h2' sx={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: '1px' }}>{title}</HeaderTypography>
             <Typography variant="caption" fontSize=".9rem" textTransform="initial">{ getTodayFormat() }</Typography>
         </HeaderPage>
     )
