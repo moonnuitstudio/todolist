@@ -89,14 +89,18 @@ export default function ToDoTable({ containerheight } : ToDoTablePropsType ) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+    const { ref: filterContainerRef, height: filterContainerHeight } = useResizeDetector<HTMLElement>()
+
     const { isMobile } = useResponsive()
     //
     const tableHeight = React.useMemo(() => {
 
-        if (isMobile) return containerheight? containerheight - 140: 200
+        const offset = filterContainerHeight? filterContainerHeight : 0
 
-        return containerheight? containerheight - 250: 400
-    }, [containerheight, isMobile])
+        if (isMobile) return (containerheight? containerheight - 140: 200) - offset
+
+        return (containerheight? containerheight - 250: 400) - offset
+    }, [containerheight, isMobile, filterContainerHeight])
 
     const handleRequestSort = ( event: React.MouseEvent<unknown>, property: keyof TableTaskType) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -153,7 +157,7 @@ export default function ToDoTable({ containerheight } : ToDoTablePropsType ) {
 
     return (
         <Paper sx={{ width: '100%', mb: 2, background: 'transparent', boxShadow: 'none !important' }}>
-            <EnhancedTableToolbar numSelected={selected.length} />
+            <EnhancedTableToolbar filterRef={filterContainerRef} numSelected={selected.length} />
             <TableContainer sx={{ maxHeight: tableHeight }}>
                 <ToDoTableBody
                     aria-labelledby="tableTitle"

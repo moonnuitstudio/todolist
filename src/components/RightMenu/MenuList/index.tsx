@@ -47,7 +47,7 @@ const MenuList = () => {
             <Divider sx={{ width: '80%', marginLeft: '24px' }} />
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton active={true} disableRipple>
+                    <ListItemButton disableRipple>
                         <ListItemIcon>
                             <InboxIcon />
                         </ListItemIcon>
