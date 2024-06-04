@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 
+import { useAuth0 } from '@auth0/auth0-react'
 import useResponsive from '../../../hooks/useResponsive'
 
 const AvatarContainer = styled(Box)(() => ({
@@ -36,6 +37,7 @@ const AvatarSubMenu = styled(Menu)(() => ({
 const ProfileAvatar = () => {
 
     const { isTabletOrDesktop } = useResponsive()
+    const { user, isAuthenticated, logout } = useAuth0()
 
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
 
@@ -49,13 +51,13 @@ const ProfileAvatar = () => {
             <AvatarContainer>
                 {isTabletOrDesktop && (
                     <AvatarTextContainer>
-                        <Typography variant='avatartitle'>Hi, Alejandro</Typography>
+                        <Typography variant='avatartitle'>Hi, { isAuthenticated && user?.name }</Typography>
                         <Typography variant='avatarbody'>It is good to see you again</Typography>
                     </AvatarTextContainer>
                 )}
                 <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                        <Avatar alt="Remy Sharp" src={ isAuthenticated && user?.picture } />
                     </IconButton>
                 </Tooltip>
             </AvatarContainer>
@@ -75,7 +77,7 @@ const ProfileAvatar = () => {
                 open={openSubMenu}
                 onClose={handleCloseUserMenu}
             >
-                <MenuItem onClick={handleCloseUserMenu}>
+                <MenuItem onClick={handleCloseUserMenu} onClickCapture={() => { logout() }}>
                     <Typography textAlign="center">Log Out</Typography>
                 </MenuItem>
             </AvatarSubMenu>

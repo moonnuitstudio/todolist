@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from  'react-router-dom'
 import { ThemeProvider } from '@mui/material/styles'
+import { useAuth0 } from "@auth0/auth0-react"
 
 import theme from './theme'
 import { Provider } from 'react-redux'
@@ -17,6 +18,12 @@ import store from './store'
 import './App.css'
 
 function App() {
+
+  const { loginWithPopup, loginWithRedirect, logout, isLoading, error, user, isAuthenticated} = useAuth0()
+  
+  if (error) {
+    return <div>Oops... {error.message}</div>;
+  }
 
   return (
     <Provider store={store}>
