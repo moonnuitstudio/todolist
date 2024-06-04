@@ -13,7 +13,9 @@ import InboxIcon from '@mui/icons-material/Inbox'
 import StarIcon from '@mui/icons-material/Star'
 import TodayIcon from '@mui/icons-material/Today'
 import DateRangeIcon from '@mui/icons-material/DateRange'
+
 import WorkIcon from '@mui/icons-material/Work'
+import EditIcon from '@mui/icons-material/Edit'
 
 import Typography from '@mui/material/Typography'
 
@@ -21,6 +23,8 @@ import IconButton from '@mui/material/IconButton'
 import AddIcon from '@mui/icons-material/Add'
 
 import useResponsive from '../../../hooks/useResponsive'
+
+import useModal from '../../../hooks/useModal'
 
 const HeaderTextList = styled(Box)(() => ({
     paddingLeft: '34px',
@@ -35,6 +39,7 @@ const HeaderTextList = styled(Box)(() => ({
 const MenuList = () => {
 
     const { isTabletOrDesktop } = useResponsive()
+    const { openModal: openProjectModal } = useModal('projectModal')
 
     return (
         <>
@@ -77,7 +82,7 @@ const MenuList = () => {
             <HeaderTextList>
                 <Typography variant="subtitle1" className='non-mouse-event'>Projects</Typography>
                 {isTabletOrDesktop && (
-                    <IconButton aria-label="plus">
+                    <IconButton aria-label="plus" onClick={openProjectModal}>
                         <AddIcon />
                     </IconButton>
                 )}
@@ -91,6 +96,9 @@ const MenuList = () => {
                         </ListItemIcon>
                         <ListItemText primary="Default" />
                     </ListItemButton>
+                    <IconButton aria-label="plus" sx={{ marginRight: '30px' }} onClick={() => { openProjectModal({ title: "default" }) }}>
+                        <EditIcon />
+                    </IconButton>
                 </ListItem>
             </List>
         </>

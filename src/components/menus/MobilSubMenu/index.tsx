@@ -7,19 +7,23 @@ import AddIcon from '@mui/icons-material/Add'
 
 import { useResizeDetector } from 'react-resize-detector'
 
+import useModal from '../../../hooks/useModal'
+
 const MenuContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
   bottom: 0,
   left: 0,
   width: '100%',
   height: '50px',
-  background: theme.palette.background.default,
-  boxShadow: '0px 0px 20px -10px rgba(0,0,0,0.75)'
+  background: `#B33F00 !important`,//background: theme.palette.background.default,
+  //boxShadow: '0px 0px 20px -10px rgba(0,0,0,0.75)'
+  borderTopRightRadius: '10px',
+  borderTopLeftRadius: '10px',
 }))
 
 const AddTaskBtn = styled(Fab)(() => ({
   position: 'absolute',
-  bottom: '10px',
+  bottom: '15px',
   left: '50%',
   transform: 'translate(-50%, 0)',
   background: `#B33F00 !important`,
@@ -35,7 +39,7 @@ const DivBtnDec = styled('div', {
   width: `${width + 10}px`,
   height: `${height + 10}px`,
   position: 'absolute',
-  bottom: '5px',
+  bottom: '10px',
   left: '50%',
   transform: 'translate(-50%, 0)',
   borderRadius: '50%',
@@ -45,11 +49,12 @@ const DivBtnDec = styled('div', {
 const MobilSubMenu = () => {
 
   const { ref, width, height } = useResizeDetector()
+  const { openModal } = useModal("taskmenu")
 
   return (
     <div style={{ height: '70px' }}>
         <MenuContainer></MenuContainer>
-        <AddTaskBtn aria-label="add-task" ref={ref}>
+        <AddTaskBtn aria-label="add-task" ref={ref} onClick={() => {openModal()}}>
           <AddIcon />
         </AddTaskBtn>
         <DivBtnDec width={width} height={height} />

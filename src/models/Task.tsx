@@ -32,6 +32,10 @@ export interface TableTaskHeadCell {
     numeric: boolean;
 }  
 
+export interface ModalTaskType {
+  
+}
+
 export const tableTaskHeadCells: readonly TableTaskHeadCell[] = [
     {
       id: 'title',
@@ -57,4 +61,19 @@ export const tableTaskHeadCells: readonly TableTaskHeadCell[] = [
       disablePadding: false,
       label: 'Started',
     }
+];
+
+export const tableTaskTableVersionHeadCells: readonly TableTaskHeadCell[] = [
+  {
+    id: 'title',
+    numeric: false,
+    disablePadding: true,
+    label: 'Task',
+  },
+  {
+    id: 'started',
+    numeric: true,
+    disablePadding: false,
+    label: 'Started',
+  }
 ];

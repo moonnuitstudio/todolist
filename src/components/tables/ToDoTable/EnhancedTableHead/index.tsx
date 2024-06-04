@@ -10,7 +10,7 @@ import Checkbox from '@mui/material/Checkbox'
 
 import { visuallyHidden } from '@mui/utils';
 
-import { TableTaskType, tableTaskHeadCells } from '../../../../models/Task';
+import { TableTaskType, tableTaskHeadCells, tableTaskTableVersionHeadCells } from '../../../../models/Task';
 
 import useResponsive from '../../../../hooks/useResponsive'
 
@@ -29,10 +29,11 @@ const EnhancedTableHead = ({ onSelectAllClick, order, orderBy, numSelected, rowC
 
     const createSortHandler = (property: keyof TableTaskType) => (event: React.MouseEvent<unknown>) => { onRequestSort(event, property); };
 
-    const { isMobile } = useResponsive()
+    const { isMobile, isTabletOrMobile } = useResponsive()
 
     const headCells = useMemo(() => {
-        if (isMobile) return tableTaskHeadCells.slice(0, 1)
+        //if (isMobile) return tableTaskHeadCells.slice(0, 1)
+        if (isTabletOrMobile) return tableTaskTableVersionHeadCells
 
         return tableTaskHeadCells
     }, [isMobile])

@@ -8,11 +8,14 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton';
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
+import FilterListIcon from '@mui/icons-material/FilterList'
 
 import Button from '@mui/material/Button'
 
 import useResponsive from '../../../../hooks/useResponsive';
+
+import useModal from '../../../../hooks/useModal';
 
 const ToDoToolbar = styled(Toolbar)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
@@ -27,7 +30,9 @@ interface EnhancedTableToolbarProps {
 
 const EnhancedTableToolbar = ({numSelected}: EnhancedTableToolbarProps) => {
 
-    const { isMobile } = useResponsive()
+  const { openModal } = useModal("taskmenu")
+
+    const { isMobile, isTabletOrMobile } = useResponsive()
 
     const BtnContents = React.useMemo(() => {
       if (isMobile) return null
@@ -39,7 +44,7 @@ const EnhancedTableToolbar = ({numSelected}: EnhancedTableToolbarProps) => {
           </IconButton>
         </Tooltip>
       ):(
-        <Button type='button' sx={{ boxShadow: 'none !important' }} variant='contained' size='large' p={2} >Add Task</Button>
+        <Button type='button' sx={{ boxShadow: 'none !important' }} variant='contained' size='large' p={2} onClick={() => {openModal()}}>Add Task</Button>
       )
 
     }, [isMobile, numSelected])
@@ -73,7 +78,15 @@ const EnhancedTableToolbar = ({numSelected}: EnhancedTableToolbarProps) => {
                 All Tasks
             </Typography>
         )}
-
+        {isTabletOrMobile && (
+          <div style={{ marginRight: isMobile? '0px' : '10px' }}>
+            <Tooltip title="filter">
+              <IconButton>
+                <FilterListIcon sx={{ color: 'black' }} />
+              </IconButton>
+            </Tooltip>
+          </div>
+        )}
         {BtnContents}
       </ToDoToolbar>
     );

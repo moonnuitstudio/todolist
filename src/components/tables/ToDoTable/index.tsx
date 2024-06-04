@@ -21,13 +21,14 @@ import EnhancedTableToolbar from './EnhancedTableToolbar'
 import ToDoRow from './ToDoRow'
 
 import { useResizeDetector } from 'react-resize-detector'
+
 import useResponsive from '../../../hooks/useResponsive'
 
 const ToDoTableBody = styled(Table)(({ theme }) => ({
     minWidth: 750,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
         minWidth: 0,
-    }
+    },
 }))
 
 // ------------------------------------------------------------------

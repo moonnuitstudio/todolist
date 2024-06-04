@@ -9,6 +9,13 @@ import Typography from '@mui/material/Typography'
 
 import ProfileAvatar from './ProfileAvatar'
 
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+
+import useResponsive from '../../hooks/useResponsive'
+
+import useModal from '../../hooks/useModal'
+
 const SpanList = styled('span')(({ theme }) => ({
     color: 'black',
     fontSize: '1.5rem',
@@ -23,21 +30,32 @@ const HeaderTypography = styled(Typography)(({ theme }) => ({
     }
 }))
 
+const HeaderContainer = styled(Container)(({ theme }) => ({
+    [theme.breakpoints.down("lg")]: {
+        padding: '0px 5% !important',
+    }
+}))
+
 interface HeaderType {
     appref: React.RefObject<HTMLElement>;
 }
 
 const Header = ({ appref }:HeaderType) => {
+
+    const { isTabletOrMobile, isMobile } = useResponsive()
+    const { openModal } = useModal("mobilemenu")
+    
     return (
         <AppBar ref={appref} position="static" elevation={0} sx={{ background: 'transparent' }}>
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
+            <HeaderContainer maxWidth="xl">
+                <Toolbar disableGutters sx={{ alignItems: 'center' }}>
                     <Box sx={{ flexGrow: 1 }}>
                         <HeaderTypography variant="h3">To Do <SpanList>List</SpanList></HeaderTypography>
                     </Box>
-                    <ProfileAvatar />
+                    {!isMobile && (<ProfileAvatar />)}
+                    {isTabletOrMobile && (<IconButton disableRipple aria-label="open menu" sx={{ paddingRight: '0px', color: 'black' }} onClick={openModal}><MenuIcon /></IconButton>)}
                 </Toolbar>
-            </Container>
+            </HeaderContainer>
         </AppBar>
     )
 }

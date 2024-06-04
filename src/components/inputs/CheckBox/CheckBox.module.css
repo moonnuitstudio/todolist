@@ -1,0 +1,40 @@
+.checkboxContainer {
+    position: relative;
+    font-family: "Poppins", sans-serif !important;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: black;
+    padding-left: 25px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.checkboxContainer:hover input ~ span {
+    background-color: #ccc;
+}
+
+.inputCheckBox {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.inputCheckBox:checked ~ span {
+    background-color: #501D86 !important;
+    border-color: #501D86;
+}
+
+.checkmark {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    background-color: transparent !important;
+    border: 1px solid black;
+}

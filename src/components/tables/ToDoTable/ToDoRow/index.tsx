@@ -8,10 +8,15 @@ import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye'
+import EditIcon from '@mui/icons-material/Edit'
 
 import useResponsive from '../../../../hooks/useResponsive'
 
 import { TableTaskType } from '../../../../models/Task'
+
+import useModal from '../../../../hooks/useModal'
+
+import ToDoTableSubMenu from '../../../menus/submenus/ToDoTableSubMenu'
 
 const ToDoTableRow = styled(TableRow)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
@@ -31,11 +36,24 @@ interface ToDoRowType {
     handleClick: HandleClickType;
 }
 
+interface MousePositionType {
+    x: number;
+    y: number;
+}
+
 const ToDoRow = ({ isItemSelected, labelId, row, handleClick }:ToDoRowType) => {
 
-    const { isMobile } = useResponsive()
+    const [mousePosition, setMousePosition] = React.useState<null | MousePositionType>(null);
 
-    return (
+    const { isMobile, isDesktopVersion, isTabletOrMobile } = useResponsive()
+
+    const { openModal } = useModal("taskmenu")
+
+    const openSubMenu = React.useMemo(() => Boolean(mousePosition), [mousePosition])
+    
+    const handleSubMenuClose = () => { setMousePosition(null); };
+
+    return (<>
         <ToDoTableRow
             hover
             role="checkbox"
@@ -43,6 +61,17 @@ const ToDoRow = ({ isItemSelected, labelId, row, handleClick }:ToDoRowType) => {
             tabIndex={-1}
             selected={isItemSelected}
             sx={{ cursor: 'pointer' }}
+            onDoubleClick={() => { openModal(row) }}
+            onContextMenu={(event) => {
+                event.preventDefault()
+                
+                if (!openSubMenu) {
+                    setMousePosition({
+                        x: event.clientX,
+                        y: event.clientY,
+                    })
+                }
+            }}
         >
             {!isMobile && (<TableCell padding="checkbox">
                 <Checkbox
@@ -53,17 +82,22 @@ const ToDoRow = ({ isItemSelected, labelId, row, handleClick }:ToDoRowType) => {
                 />
             </TableCell>)}
             <TableCell component="th" id={labelId} scope="row" padding="none"> {row.title}</TableCell>
-
-            {!isMobile && (<>
-                <TableCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 300 }} >{row.project}</TableCell>
-                <TableCell align="left" style={{ width: 160 }} >{row.due}</TableCell>
-                <TableCell align="right" style={{ width: 160 }} >
-                    <IconButton aria-label="delete"><PanoramaFishEyeIcon /></IconButton>
-                    <IconButton aria-label="delete"><StarBorderIcon /></IconButton>
-                </TableCell>
-            </>)}
-    </ToDoTableRow>
-    )
+            { isDesktopVersion && (<>
+                <TableCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 300 }}>{row.project}</TableCell>
+                <TableCell align="left" style={{ width: 160 }}>{row.due}</TableCell>
+            </>) }
+            
+            <TableCell align="right" style={{ width: isMobile? 60 : 160 }}>
+                <IconButton aria-label="edit" onClick={() => { openModal(row) }}><EditIcon /></IconButton>
+                {!isMobile && (<>
+                    <IconButton aria-label="complete"><PanoramaFishEyeIcon /></IconButton>
+                    <IconButton aria-label="start"><StarBorderIcon /></IconButton>
+                </>)}
+            </TableCell>
+            
+        </ToDoTableRow>
+        <ToDoTableSubMenu id={`sub-menu-${row.id}-${row.title}`} position={mousePosition} onClose={handleSubMenuClose} open={openSubMenu} task={row} />
+    </>)
 }
 
 export default ToDoRow

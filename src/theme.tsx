@@ -24,7 +24,7 @@ const palette = {
         default: '#F5F5F5'
     },
     primary: {
-        main: '#1B3AFA',
+        main: '#025951',
         light: '#025951',
         dark: '#020873',
     },
@@ -68,6 +68,13 @@ const theme = createTheme({
             fontSize: '2.2rem',
             textTransform: 'uppercase',
             letterSpacing: '-1px'
+        },
+        h4: {
+            fontFamily: "'Montserrat'",
+            fontWeight: '700',
+            fontSize: '1rem',
+            textTransform: 'uppercase',
+            color: palette.primary.main
         },
         h6: {
             fontFamily: "'League_Spartan'",
@@ -243,6 +250,10 @@ const theme = createTheme({
                     '&:hover': {
                         background: '#F28F29',
                     }
+                },
+                text: {
+                    background: 'transparent !important',
+                    color: 'black'
                 }
             }
         }
