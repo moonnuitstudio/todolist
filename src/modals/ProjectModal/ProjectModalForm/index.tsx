@@ -13,7 +13,13 @@ import TextFieldBase from "../../../components/inputs/TextFieldBase";
 import Box from '@mui/material/Box'
 import Button from "@mui/material/Button";
 
+import useProjects from "../../../hooks/useProjects";
+import useToast from '../../../hooks/useToast'
+
+import { ERR_TYPE_BY_MULTIPLE_FIELDS } from '../../../types/errTypes'
+
 type ProjectType = yup.InferType<typeof ProjectSchema>
+type CloseModalHandleType = () => void
 
 const initValues:ProjectType = { 
     title: ''
@@ -27,9 +33,13 @@ const Form = styled('form')(() => ({
 interface ProjectModalFormProp {
     isEdit: boolean;
     project: ProjectType;
+    handleCloseModal: CloseModalHandleType;
 }
 
-const ProjectModalForm = ({ isEdit, project }:ProjectModalFormProp) => {
+const ProjectModalForm = ({ isEdit, project, handleCloseModal }:ProjectModalFormProp) => {
+
+    const { saveProject } = useProjects()
+    const { showSuccessToast, showErrorToast } = useToast()
 
     const defaultValues = React.useMemo(() => {
         return isEdit? project : initValues
@@ -42,7 +52,28 @@ const ProjectModalForm = ({ isEdit, project }:ProjectModalFormProp) => {
     });
 
     const onSubmit = (data:ProjectType) => {
+        saveProject(data, (status, data) => {
+            if (status) {
+                showSuccessToast("The new project has been successfully registered.")
+                handleCloseModal()
+            } else {
+                console.log(data)
+                const { err_type } = data
 
+                switch(err_type) {
+                    case ERR_TYPE_BY_MULTIPLE_FIELDS:
+                        const { fields } = data
+
+                        for (var field in fields) {
+                            methods.setError(field.toLowerCase(), { type: 'custom', message: fields[field] })
+                        }
+                        
+                        break;
+                }
+
+                showErrorToast("The project could not be registered.")
+            }
+        })
     }
 
     return (

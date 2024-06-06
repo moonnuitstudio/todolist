@@ -13,13 +13,17 @@ import TaskMenu from './components/menus/TaskMenu'
 import MobileMenu from './components/menus/MobileMenu'
 import ProjectModal from './modals/ProjectModal'
 
+import { ToastContainer } from 'react-toastify'
+
 import CssBaseline from '@mui/material/CssBaseline'
 import store from './store'
+
+import 'react-toastify/dist/ReactToastify.css'
 import './App.css'
 
 function App() {
 
-  const { loginWithPopup, loginWithRedirect, logout, isLoading, error, user, isAuthenticated} = useAuth0()
+  const { error } = useAuth0()
   
   if (error) {
     return <div>Oops... {error.message}</div>;
@@ -40,6 +44,8 @@ function App() {
           <TaskMenu />
           <ProjectModal />
           <MobileMenu />
+
+          <ToastContainer />
         </ThemeProvider>
       </Router>
     </Provider>

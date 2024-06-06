@@ -25,6 +25,7 @@ import AddIcon from '@mui/icons-material/Add'
 import useResponsive from '../../../hooks/useResponsive'
 
 import useModal from '../../../hooks/useModal'
+import useProjects from '../../../hooks/useProjects'
 
 const HeaderTextList = styled(Box)(() => ({
     paddingLeft: '34px',
@@ -40,6 +41,7 @@ const MenuList = () => {
 
     const { isTabletOrDesktop } = useResponsive()
     const { openModal: openProjectModal } = useModal('projectModal')
+    const { projects } = useProjects()
 
     return (
         <>
@@ -82,24 +84,26 @@ const MenuList = () => {
             <HeaderTextList>
                 <Typography variant="subtitle1" className='non-mouse-event'>Projects</Typography>
                 {isTabletOrDesktop && (
-                    <IconButton aria-label="plus" onClick={openProjectModal}>
+                    <IconButton aria-label="plus" onClick={() => { openProjectModal() }}>
                         <AddIcon />
                     </IconButton>
                 )}
             </HeaderTextList>
             <Divider sx={{ width: '80%', marginLeft: '24px' }} />
             <List>
-                <ListItem disablePadding>
-                    <ListItemButton disableRipple>
-                        <ListItemIcon>
-                            <WorkIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Default" />
-                    </ListItemButton>
-                    <IconButton aria-label="plus" sx={{ marginRight: '30px' }} onClick={() => { openProjectModal({ title: "default" }) }}>
-                        <EditIcon />
-                    </IconButton>
-                </ListItem>
+                {projects && projects instanceof Array && projects.length > 0 && projects.map((project, index) => (
+                    <ListItem key={`${project.id}-${index}`} disablePadding>
+                        <ListItemButton disableRipple>
+                            <ListItemIcon>
+                                <WorkIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={project.Title} />
+                        </ListItemButton>
+                        <IconButton aria-label="plus" sx={{ marginRight: '30px' }} onClick={() => { openProjectModal({ title: project.Title }) }}>
+                            <EditIcon />
+                        </IconButton>
+                    </ListItem>
+                ))}
             </List>
         </>
     )

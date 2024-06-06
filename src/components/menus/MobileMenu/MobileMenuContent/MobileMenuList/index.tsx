@@ -14,6 +14,7 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree'
 import Typography from '@mui/material/Typography'
 
 import useModal from '../../../../../hooks/useModal'
+import useProjects from '../../../../../hooks/useProjects'
 
 const HeaderTextList = styled(Box)(() => ({
     paddingLeft: '34px',
@@ -30,6 +31,7 @@ const MobileMenuList = () => {
     //const { isTabletOrDesktop } = useResponsive()
     const { openModal: openProjectModal } = useModal('projectModal')
     const { closeModal: closeMobileMenu } = useModal('mobilemenu')
+    const { projects } = useProjects()
 
     return (
         <>
@@ -46,14 +48,16 @@ const MobileMenuList = () => {
                         <ListItemText primary="Create Project" />
                     </ListItemButton>  
                 </ListItem>
-                <ListItem disablePadding> 
-                    <ListItemButton onClick={() => { closeMobileMenu(); openProjectModal({ title: "default" }); }} disableRipple>
-                        <ListItemIcon>
-                            <WorkIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Default" />
-                    </ListItemButton>
-                </ListItem>
+                {projects && projects instanceof Array && projects.length > 0 && projects.map((project, index) => (
+                    <ListItem key={`${project.ID}-${index}`} disablePadding> 
+                        <ListItemButton onClick={() => { closeMobileMenu(); openProjectModal({ title: project.Title }); }} disableRipple>
+                            <ListItemIcon>
+                                <WorkIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={project.Title} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
             </List>
         </>
     )

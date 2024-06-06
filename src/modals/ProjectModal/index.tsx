@@ -72,7 +72,7 @@ const ProjectModal = () => {
                             {isMobile? (<KeyboardArrowDownIcon />):(<CloseIcon />)}
                         </IconButton>
                     </Box>
-                    <ProjectModalForm isEdit={isEdit} project={data} />
+                    <ProjectModalForm isEdit={isEdit} project={data} handleCloseModal={closeModal} />
                 </ModalBox>
 
             </Slide>
