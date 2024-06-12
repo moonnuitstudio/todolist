@@ -35,11 +35,18 @@ const useProjects = () => {
         })
     }
 
+    const getProjectById = (id:number) => {
+        return projects.find((project) => {
+            return project.ID == id
+        })
+    }
+
     return {
         projects,
         loading,
         loadProject,
-        saveProject
+        saveProject,
+        getProjectById
     }
 }
 

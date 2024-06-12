@@ -103,7 +103,7 @@ const MainMenuContent = ({ onMenuClose }:MainMenuContentPropsType) => {
         <MenuContent>
             <List sx={{ marginBottom: '7px' }}>
                 <ListItem disablePadding>
-                    <CostumListItemButton onClick={() => { closeMenu(); }} disableRipple>
+                    <CostumListItemButton onClick={() => {closeMenu();}} onClickCapture={() => {navigate(`/`)}} disableRipple>
                         <CostumListItemIcon> <FormatListNumberedIcon /> </CostumListItemIcon>
                         <CostumListItemText primary="Tasks" />
                     </CostumListItemButton>

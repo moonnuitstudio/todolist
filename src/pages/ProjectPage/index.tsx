@@ -7,6 +7,8 @@ import Box from '@mui/material/Box'
 import PageHeader from '../../components/PageHeader'
 
 import { useParams } from 'react-router-dom'
+import useProjects from '../../hooks/useProjects'
+import { string } from 'yup'
 
 const CustomContainer = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -22,11 +24,24 @@ const CustomContainer = styled(Box)(({ theme }) => ({
 }))
 
 const ProjectPage = () => {
-  let { id } = useParams();
+  
+  const [loadingPage, setLoadingPage] = React.useState(true)
+  const { getProjectById, loading } = useProjects()
+
+  const { id } = useParams();
 
   React.useEffect(() => {
-    
-  }, [id])
+    if (!loading && id && !isNaN(id) && !isNaN(parseFloat(id))) {
+      
+      const project = getProjectById(parseInt(id))
+      
+      if (!project) {
+        alert('ERR')
+      } 
+
+      setLoadingPage(false)
+    }
+  }, [id, getProjectById, loading])
 
   return (
     <CustomContainer>
