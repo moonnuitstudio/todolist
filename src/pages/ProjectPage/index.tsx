@@ -1,8 +1,12 @@
+import React from 'react'
+
 import { styled } from '@mui/system'
 
 import Box from '@mui/material/Box'
 
-import PageHeader from '../components/PageHeader'
+import PageHeader from '../../components/PageHeader'
+
+import { useParams } from 'react-router-dom'
 
 const CustomContainer = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -17,7 +21,13 @@ const CustomContainer = styled(Box)(({ theme }) => ({
   }
 }))
 
-const NewDashboardPage = () => {
+const ProjectPage = () => {
+  let { id } = useParams();
+
+  React.useEffect(() => {
+    
+  }, [id])
+
   return (
     <CustomContainer>
       <PageHeader />
@@ -25,4 +35,4 @@ const NewDashboardPage = () => {
   )
 }
 
-export default NewDashboardPage
+export default ProjectPage

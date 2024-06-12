@@ -25,6 +25,8 @@ import Skeleton from '@mui/material/Skeleton'
 import useResponsive from '../../../../hooks/useResponsive'
 import useModal from '../../../../hooks/useModal'
 import useProjects from '../../../../hooks/useProjects'
+
+import { useNavigate } from "react-router-dom"
 import { useAuth0 } from '@auth0/auth0-react'
 
 const CostumListItemIcon = styled(ListItemIcon)(() => ({
@@ -85,6 +87,7 @@ interface MainMenuContentPropsType {
 const MainMenuContent = ({ onMenuClose }:MainMenuContentPropsType) => {
 
     const { isLoading } = useAuth0()
+    const navigate = useNavigate()
 
     const { openModal: openProjectModal } = useModal('projectModal')
     const { isTabletOrMobile, isMobile } = useResponsive()
@@ -130,8 +133,8 @@ const MainMenuContent = ({ onMenuClose }:MainMenuContentPropsType) => {
                     <Skeleton sx={{ bgcolor: 'grey.400', marginBottom: '10px' }} variant="rounded" width="100%" height={35} />
                 </>)}
                 {projects && projects instanceof Array && projects.length > 0 && projects.map((project, index) => (
-                    <ListItem key={`${project.id}-${index}`} disablePadding>
-                        <CostumListItemButton disableRipple>
+                    <ListItem key={`${project.ID}-${index}`} disablePadding>
+                        <CostumListItemButton onClick={() => {closeMenu();}} onClickCapture={() => {navigate(`/project/${project.ID}`)}} disableRipple>
                             <CostumListItemIcon> <WorkIcon /> </CostumListItemIcon>
                             <CostumListItemText primary={project.Title} />
                         </CostumListItemButton>

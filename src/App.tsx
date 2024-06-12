@@ -11,9 +11,13 @@ import DashboardLayout from './layouts/DashboardLayout'
 import DashboardPage from './pages/DashboardPage'
 import NewDashboardPage from './pages/NewDashboardPage'
 
+import ProjectPage from './pages/ProjectPage'
+
 import TaskMenu from './components/menus/TaskMenu'
 import MobileMenu from './components/menus/MobileMenu'
 import ProjectModal from './modals/ProjectModal'
+
+import LoadingPage from './components/LoadingPage'
 
 import { ToastContainer } from 'react-toastify'
 
@@ -25,7 +29,7 @@ import './App.css'
 
 function App() {
 
-  const { error } = useAuth0()
+  const { error, isLoading } = useAuth0()
   
   if (error) {
     return <div>Oops... {error.message}</div>;
@@ -38,18 +42,22 @@ function App() {
           <CssBaseline />
 
           <Routes>
-            <Route path='/' element={<DashboardLayout />}>
+            <Route path='/test' element={<DashboardLayout />}>
               <Route index element={<DashboardPage />} />
             </Route>
 
-            <Route path='/newdesign' element={<NewDashboardLayout />}>
+            <Route path='/' element={<NewDashboardLayout />}>
               <Route index element={<NewDashboardPage />} />
+              <Route path='project/:id' element={<ProjectPage />} />
             </Route>
+
           </Routes>
 
           <TaskMenu />
           <ProjectModal />
           <MobileMenu />
+
+          {isLoading && (<LoadingPage />)}
 
           <ToastContainer />
         </ThemeProvider>

@@ -25,8 +25,8 @@ const palette = {
         default: '#F5F5F5'
     },
     primary: {
+        light: '#3EAEA3',
         main: '#025951',
-        light: '#025951',
         dark: '#020873',
     },
     secondary: {
@@ -63,7 +63,7 @@ const theme = createTheme({
             lineHeight: '1rem',
         },
         h3: {
-            color: palette.primary.light,
+            color: palette.primary.main,
             fontFamily: "'League_Spartan'",
             fontWeight: '900',
             fontSize: '1.2rem',
@@ -72,11 +72,11 @@ const theme = createTheme({
             letterSpacing: '-1px'
         },
         h4: {
-            fontFamily: "'Montserrat'",
+            fontFamily: "'League_Spartan'",
             fontWeight: '700',
-            fontSize: '1rem',
-            textTransform: 'uppercase',
-            color: palette.primary.main
+            fontSize: '1.2rem',
+            textTransform: 'capitalize',
+            color: 'black'
         },
         h6: {
             fontFamily: "'League_Spartan'",
@@ -84,7 +84,7 @@ const theme = createTheme({
             color: 'rgba(0,0,0,.7)'
         },
         subtitle1: {
-            color: palette.primary.light,
+            color: palette.primary.main,
             fontFamily: "'League_Spartan'",
             fontWeight: '800',
             fontSize: '1rem',
