@@ -17,7 +17,7 @@ const useProjects = () => {
     const dispatch = useDispatch()
     const { token: authToken } = useToken()
 
-    const { projects } = useSelector(state => state.projects)
+    const { projects, loading } = useSelector(state => state.projects)
 
     const loadProject = (token: null | string = null) => {
         AxiosClient.get("/projects", generateConfig(token? token : authToken)).then(({ data }) => {
@@ -37,6 +37,7 @@ const useProjects = () => {
 
     return {
         projects,
+        loading,
         loadProject,
         saveProject
     }

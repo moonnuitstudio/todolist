@@ -1,23 +1,19 @@
 import React from "react"
+
 import { Outlet } from "react-router-dom"
 import { styled } from '@mui/system'
 
 import Container from "@mui/material/Container"
-import Box from "@mui/material/Box"
+import Stack from "@mui/material/Stack"
 
-import Header from "../components/Header"
-import RightMenu from "../components/RightMenu"
-
-import HeaderPageInfo from  "../components/UI/HeaderPageInfo"
-import MobilSubMenu from "../components/menus/MobilSubMenu"
-
-import useResponsive from "../hooks/useResponsive"
-import { useResizeDetector } from "react-resize-detector"
-
-import useProjects from "../hooks/useProjects"
-import useToken from "../hooks/useToken"
+import HeaderToolbar from "../../components/HeaderToolbar"
+import MainMenu from "./MainMenu"
 
 import { useAuth0 } from "@auth0/auth0-react"
+import { useResizeDetector } from "react-resize-detector"
+
+import useToken from "../../hooks/useToken"
+import useProjects from "../../hooks/useProjects"
 
 const DashboardContainer = styled(Container)(() => ({
     width: '100vw !important',
@@ -25,16 +21,15 @@ const DashboardContainer = styled(Container)(() => ({
     height: '100vh !important',
     margin: '0px !important',
     padding: '0px !important',
-    overflow: 'hidden'
+    overflow: 'hidden',
 }))
 
-const BoxContentContainer = styled(Box, {
+const BoxContentContainer = styled(Stack, {
     shouldForwardProp: (prop) => prop !== "headerheight"
 })(({ theme, headerheight }) => ({
     padding: '0px',
     width: '100%',
     height: `calc(100% - ${headerheight}px)`,
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
@@ -43,40 +38,17 @@ const BoxContentContainer = styled(Box, {
     }
 }))
 
-const BoxOutletContent = styled(Box)(({ theme }) => ({
-    flexGrow: 1, 
-    padding: '10px 2%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingTop: '20px',
-    [theme.breakpoints.down('md')]: {
-        padding: '10px 5%',
-    },
-    [theme.breakpoints.down('sm')]: {
-        padding: '0px'
-    }
-}))
+const NewDashboardLayout = () => {
 
-const RealContentContainer = styled(Box)(({ theme }) => ({
-    flexGrow: 1, 
-    width: '100%', 
-    display: 'flex',
-    paddingTop: '20px',
-    [theme.breakpoints.down("sm")]: {
-        flexDirection: 'column'
-    }
-}))
-
-const DashboardLayout = () => {
-
-    const { isMobile } = useResponsive()
-    const { ref: HeaderRef, height: headerHeight } = useResizeDetector()
     const { saveToken, token } = useToken()
     const { loadProject } = useProjects()
-    
-    const { isAuthenticated, user, loginWithRedirect, getAccessTokenSilently, logout, isLoading } = useAuth0()
+
+    const { isAuthenticated, user, loginWithRedirect, getAccessTokenSilently, isLoading } = useAuth0()
+    const { ref: HeaderRef, height: headerHeight } = useResizeDetector()
+
+    const [menuOpen, setMenuOpen] = React.useState(true)
+
+    const handleOpenMenu = () => setMenuOpen(!menuOpen)
 
     React.useEffect(() => {
         if (!isLoading && !isAuthenticated) {
@@ -106,20 +78,13 @@ const DashboardLayout = () => {
 
     return (
         <DashboardContainer>
-            <Header appref={HeaderRef} />
+            <HeaderToolbar appref={HeaderRef} onHandleOpen={handleOpenMenu} />
             <BoxContentContainer headerheight={headerHeight}>
-                <RightMenu />
-                <BoxOutletContent>
-                    <HeaderPageInfo title="Tasks" />
-                    <RealContentContainer>
-                        <Outlet />
-
-                        {isMobile && (<MobilSubMenu />)}
-                    </RealContentContainer>
-                </BoxOutletContent>
+                <MainMenu menuWidth={250} tabletMenuWidth={350} open={menuOpen} onMenuClose={() => setMenuOpen(false)} />
+                <Outlet />
             </BoxContentContainer>
         </DashboardContainer>
     )
 }
 
-export default DashboardLayout
+export default NewDashboardLayout

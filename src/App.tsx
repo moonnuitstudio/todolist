@@ -5,9 +5,11 @@ import { useAuth0 } from "@auth0/auth0-react"
 import theme from './theme'
 import { Provider } from 'react-redux'
 
+import NewDashboardLayout from './layouts/NewDashboardLayout'
 import DashboardLayout from './layouts/DashboardLayout'
 
 import DashboardPage from './pages/DashboardPage'
+import NewDashboardPage from './pages/NewDashboardPage'
 
 import TaskMenu from './components/menus/TaskMenu'
 import MobileMenu from './components/menus/MobileMenu'
@@ -38,6 +40,10 @@ function App() {
           <Routes>
             <Route path='/' element={<DashboardLayout />}>
               <Route index element={<DashboardPage />} />
+            </Route>
+
+            <Route path='/newdesign' element={<NewDashboardLayout />}>
+              <Route index element={<NewDashboardPage />} />
             </Route>
           </Routes>
 

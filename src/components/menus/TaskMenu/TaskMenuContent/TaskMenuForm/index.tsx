@@ -22,6 +22,8 @@ import EventFormTitle from "../../../../forms/decorations/EventFormTitle";
 
 import { TableTaskType } from "../../../../../models/Task";
 
+import useProjects from "../../../../../hooks/useProjects";
+
 type FormFields = yup.InferType<typeof TaskSchema>
 
 const initValues:FormFields = { 
@@ -43,6 +45,8 @@ interface TaskMenuFormProp {
 
 const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
 
+    const { projects } = useProjects()
+
     const defaultValues = React.useMemo(() => {
         return isEdit? {
             title: task.title,
@@ -51,6 +55,13 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
             duetime: ''
         } : initValues
     }, [isEdit, task])
+
+    const selectProjectsValue = React.useMemo(() => {
+        return projects.map(( project ) => ({
+            id: project.ID,
+            name: project.Title,
+        }))
+    }, [projects])
 
     const methods = useForm<FormFields>({
         defaultValues,
@@ -66,7 +77,7 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
         <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
                 <TextFieldBase id="title" title='Task*' placeholder="Buy groceries" endIcon={<IconButton aria-label="stared"><StarBorderIcon /></IconButton>} />
-                <TextFieldBase id="project" title='Project' placeholder="Default" type="select" values={[]} />
+                <TextFieldBase id="project" title='Project' placeholder="Default" type="select" values={selectProjectsValue} />
                 <Grid container>
                     <Grid item  xs={12} sm={6}>
                         <TextFieldBase id="status" title='Status' type="select" values={[ { id: 2, name: 'To Do' }, {id: 1, name: 'Done'} ]} />

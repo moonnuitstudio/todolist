@@ -5,7 +5,8 @@ import {
 } from '../reducertypes/projectsReducerTypes.js'
 
 const initialStates = {
-    projects: []
+    projects: [],
+    loading: true,
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -16,7 +17,8 @@ export default function(state = initialStates, action) {
         case REDU_LOAD_PROJECTS:
             return {
                 ...state,
-                projects: action.payload
+                projects: action.payload,
+                loading: false,
             }
 
         case REDU_SAVE_PROJECTS: 

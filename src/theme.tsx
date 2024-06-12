@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles'
+import { grey } from '@mui/material/colors';
 
 import LeagueSpartanBold from './assets/fonts/league_spartan/LeagueSpartanBold.ttf'
 import LeagueSpartanBlack from './assets/fonts/league_spartan/LeagueSpartanBlack.ttf'
@@ -65,7 +66,8 @@ const theme = createTheme({
             color: palette.primary.light,
             fontFamily: "'League_Spartan'",
             fontWeight: '900',
-            fontSize: '2.2rem',
+            fontSize: '1.2rem',
+            lineHeight: '1rem',
             textTransform: 'uppercase',
             letterSpacing: '-1px'
         },
@@ -85,7 +87,7 @@ const theme = createTheme({
             color: palette.primary.light,
             fontFamily: "'League_Spartan'",
             fontWeight: '800',
-            fontSize: '1.5rem',
+            fontSize: '1rem',
             textTransform: 'uppercase',
         },
         caption: {
@@ -94,6 +96,13 @@ const theme = createTheme({
             fontWeight: '400',
             fontSize: '1.4rem',
             lineHeight: '1.1rem',
+        }, 
+        avatarinfo: {
+            color: 'black',
+            fontFamily: "'Montserrat'",
+            fontWeight: '400',
+            fontSize: '.95rem',
+            lineHeight: '1.2rem',
         }
     },
     components: {
@@ -160,48 +169,9 @@ const theme = createTheme({
             defaultProps: {
                 variantMapping: {
                     avatartitle: 'p',
-                    avatarbody: 'p'
+                    avatarbody: 'p',
+                    avatarinfo: 'p'
                 }
-            }
-        },
-        MuiListItemIcon: {
-            styleOverrides: {
-                root: {
-                    color: '#7B89A2',
-                    transition: 'color .2s ease-in-out',
-                    '& svg': {
-                        fontSize: '1.7rem',
-                    }
-                }
-            }
-        },
-        MuiListItemText: {
-            styleOverrides: {
-                root: {
-                    color: '#7B89A2',
-                    transition: 'color .2s ease-in-out',
-                    '& .MuiTypography-root': {
-                        fontFamily: "'Montserrat'",
-                        fontWeight: '400',
-                        fontSize: '1.1rem'
-                    }
-                }
-            }
-        },
-        MuiListItemButton: {
-            styleOverrides: {
-                root: ({ active }) => ({
-                    paddingLeft: '34px',
-                    background: 'transparent !important',
-                    '&:hover': {
-                        '& .MuiListItemIcon-root': { color: '#18181C', },
-                        '& .MuiTypography-root': { color: '#18181C', }
-                    },
-                    ...(active == true && {
-                        '& .MuiListItemIcon-root': { color: '#593202 !important', },
-                        '& .MuiTypography-root': { color: '#593202 !important', }
-                    }),
-                })
             }
         },
         MuiTableSortLabel: {
@@ -254,6 +224,13 @@ const theme = createTheme({
                 text: {
                     background: 'transparent !important',
                     color: 'black'
+                }
+            }
+        },
+        MuiSkeleton: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: grey[400],
                 }
             }
         }
