@@ -7,6 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { ProjectSchema } from "../../../schemas"
+import { ProjectSchemaType, ProjectType } from "../../../models/Project";
 
 import TextFieldBase from "../../../components/inputs/TextFieldBase";
 
@@ -18,10 +19,9 @@ import useToast from '../../../hooks/useToast'
 
 import { ERR_TYPE_BY_MULTIPLE_FIELDS } from '../../../types/errTypes'
 
-type ProjectType = yup.InferType<typeof ProjectSchema>
 type CloseModalHandleType = () => void
 
-const initValues:ProjectType = { 
+const initValues:ProjectSchemaType = { 
     title: ''
 }
 
@@ -32,48 +32,70 @@ const Form = styled('form')(() => ({
 
 interface ProjectModalFormProp {
     isEdit: boolean;
-    project: ProjectType;
+    project: ProjectSchemaType | ProjectType;
     handleCloseModal: CloseModalHandleType;
 }
 
 const ProjectModalForm = ({ isEdit, project, handleCloseModal }:ProjectModalFormProp) => {
 
-    const { saveProject } = useProjects()
+    const { saveProject, updateProject } = useProjects()
     const { showSuccessToast, showErrorToast } = useToast()
 
     const defaultValues = React.useMemo(() => {
         return isEdit? project : initValues
     }, [isEdit, project])
 
-    const methods = useForm<ProjectType>({
+    const methods = useForm<ProjectSchemaType>({
         defaultValues,
         resolver: yupResolver(ProjectSchema), 
         mode: "onChange"
     });
 
-    const onSubmit = (data:ProjectType) => {
-        saveProject(data, (status, data) => {
+    const showErrFields = (data:unknown) => {
+        const { err_type } = data
+
+        switch(err_type) {
+            case ERR_TYPE_BY_MULTIPLE_FIELDS:
+                const { fields } = data
+
+                for (var field in fields) {
+                    methods.setError(field.toLowerCase(), { type: 'custom', message: fields[field] })
+                }
+                
+                break;
+        }
+    }
+    
+    const postSaveProject = (_data:ProjectSchemaType) => {
+        saveProject(_data, (status, data) => {
             if (status) {
                 showSuccessToast("The new project has been successfully registered.")
                 handleCloseModal()
             } else {
-                console.log(data)
-                const { err_type } = data
-
-                switch(err_type) {
-                    case ERR_TYPE_BY_MULTIPLE_FIELDS:
-                        const { fields } = data
-
-                        for (var field in fields) {
-                            methods.setError(field.toLowerCase(), { type: 'custom', message: fields[field] })
-                        }
-                        
-                        break;
-                }
-
+                showErrFields(data)
                 showErrorToast("The project could not be registered.")
             }
         })
+    }
+
+    const putUpdateProject = (id:number, _data:ProjectSchemaType) => {
+        updateProject(id, _data, (status, data) => {
+            if (status) {
+                showSuccessToast("Project has been successfully updated.")
+                handleCloseModal()
+            } else {
+                showErrFields(data)
+                showErrorToast("The project could not be updated.")
+            }
+        })
+    }
+
+    const onSubmit = (data:ProjectSchemaType) => {
+        if (isEdit) {
+            putUpdateProject(project.id, data)
+        } else {
+            postSaveProject(data)
+        }     
     }
 
     return (

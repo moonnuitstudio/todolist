@@ -133,10 +133,10 @@ const MainMenuContent = ({ onMenuClose }:MainMenuContentPropsType) => {
                     <Skeleton sx={{ bgcolor: 'grey.400', marginBottom: '10px' }} variant="rounded" width="100%" height={35} />
                 </>)}
                 {projects && projects instanceof Array && projects.length > 0 && projects.map((project, index) => (
-                    <ListItem key={`${project.ID}-${index}`} disablePadding>
-                        <CostumListItemButton onClick={() => {closeMenu();}} onClickCapture={() => {navigate(`/project/${project.ID}`)}} disableRipple>
+                    <ListItem key={`${project.id}-${index}`} disablePadding>
+                        <CostumListItemButton onClick={() => {closeMenu();console.log(project)}} onClickCapture={() => {navigate(`/project/${project.id}`)}} disableRipple>
                             <CostumListItemIcon> <WorkIcon /> </CostumListItemIcon>
-                            <CostumListItemText primary={project.Title} />
+                            <CostumListItemText primary={project.title} />
                         </CostumListItemButton>
                     </ListItem>
                 ))}

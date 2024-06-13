@@ -27,6 +27,13 @@ import Swal from 'sweetalert2'
 import { ProjectType } from '../../models/Project'
 
 import { useAuth0 } from '@auth0/auth0-react'
+import { useNavigate } from 'react-router-dom'
+
+import useToast from '../../hooks/useToast'
+import useModal from '../../hooks/useModal'
+import useProjects from '../../hooks/useProjects'
+
+import { ERR_TYPE_MESSAGE } from '../../types/errTypes'
 
 const HeaderContainer = styled('header')(() => ({
     //background: 'red',
@@ -56,11 +63,17 @@ const CustomMenu = styled(Menu)(({ theme }) => ({
 
 interface ProjectPagePropsType {
     project: null | ProjectType;
+    useproject?: boolean;
 }
 
-const PageHeader = ({ project = null }: ProjectPagePropsType) => {
+const PageHeader = ({ project = null, useproject = false }: ProjectPagePropsType) => {
 
     const { isLoading } =  useAuth0()
+    const navigate = useNavigate()
+
+    const { openModal: openProjectModal } = useModal("projectModal")
+    const { deleteProject } = useProjects()
+    const { showErrorToast } = useToast()
 
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
     const openTaskGroupMenu = React.useMemo(() => Boolean(anchorElUser), [anchorElUser])
@@ -82,7 +95,21 @@ const PageHeader = ({ project = null }: ProjectPagePropsType) => {
             denyButtonText: `Delete Project`
         }).then((result) => {
             if (result.isDenied) {
-              Swal.fire("Project Deleted", "", "success");
+                deleteProject(project?.id, (status, data) => {
+                    if (status) {
+                        Swal.fire("Project Deleted", "", "success");
+                        navigate("/")
+                    } else {
+                        const { err_type } = data
+
+                        switch(err_type) {
+                            case ERR_TYPE_MESSAGE:
+                                console.log(data.msg)
+                                showErrorToast("There was an error!")
+                                break
+                        }
+                    }
+                })
             }
         });
     }
@@ -90,14 +117,14 @@ const PageHeader = ({ project = null }: ProjectPagePropsType) => {
     return (<>
         <HeaderContainer>
             <Stack flexDirection="row" justifyContent="flex-start" alignItems="center" gap={1}>
-                {isLoading? (<>
+                {(isLoading || (useproject && !project))? (<>
                     <Skeleton variant="rounded" width={54} height={54} />
                     <Skeleton variant="rounded" width={200} height={24} />
                 </>) : (<>
                     <IconProjectBox>
                         {isProjectType? (<WorkIcon sx={{ color: 'black' }} />) : (<FormatListNumberedIcon sx={{ color: 'black' }} />)}
                     </IconProjectBox>
-                    <Typography variant='h4'> {isProjectType? project?.Title : "My Tasks"}</Typography>
+                    <Typography variant='h4'> {isProjectType? project?.title : "My Tasks"}</Typography>
                     {isProjectType && (
                         <IconButton onClick={handleOpenTaskGroupMenu} disableRipple>
                             <AppRegistrationIcon sx={{ color: 'rgba(0,0,0,.8)' }} />
@@ -122,7 +149,7 @@ const PageHeader = ({ project = null }: ProjectPagePropsType) => {
             open={openTaskGroupMenu}
             onClose={handleCloseTaskGroupMenu}
         >
-            <MenuItem onClick={handleCloseTaskGroupMenu} onClickCapture={() => {  }}>
+            <MenuItem onClick={handleCloseTaskGroupMenu} onClickCapture={() => { openProjectModal(project) }}>
                 <ListItemIcon>
                     <EditIcon fontSize="small" />
                 </ListItemIcon>

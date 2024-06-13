@@ -99,7 +99,7 @@ const MenuList = () => {
                             </ListItemIcon>
                             <ListItemText primary={project.Title} />
                         </ListItemButton>
-                        <IconButton aria-label="plus" sx={{ marginRight: '30px' }} onClick={() => { openProjectModal({ title: project.Title }) }}>
+                        <IconButton aria-label="plus" sx={{ marginRight: '30px' }} onClick={() => { openProjectModal({ title: project.title }) }}>
                             <EditIcon />
                         </IconButton>
                     </ListItem>

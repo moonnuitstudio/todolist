@@ -58,8 +58,8 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
 
     const selectProjectsValue = React.useMemo(() => {
         return projects.map(( project ) => ({
-            id: project.ID,
-            name: project.Title,
+            id: project.id,
+            name: project.title,
         }))
     }, [projects])
 

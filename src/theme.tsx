@@ -4,6 +4,7 @@ import { grey } from '@mui/material/colors';
 import LeagueSpartanBold from './assets/fonts/league_spartan/LeagueSpartanBold.ttf'
 import LeagueSpartanBlack from './assets/fonts/league_spartan/LeagueSpartanBlack.ttf'
 import LeagueSpartanSemiBold from './assets/fonts/league_spartan/LeagueSpartanSemiBold.ttf'
+import LeagueSpartanRegular from './assets/fonts/league_spartan/LeagueSpartanRegular.ttf'
 
 import MontserratLight from './assets/fonts/montserrat/MontserratLight.ttf'
 import MontserratRegular from './assets/fonts/montserrat/MontserratRegular.ttf'
@@ -73,7 +74,7 @@ const theme = createTheme({
         },
         h4: {
             fontFamily: "'League_Spartan'",
-            fontWeight: '700',
+            fontWeight: '400',
             fontSize: '1.2rem',
             textTransform: 'capitalize',
             color: 'black'
@@ -108,6 +109,14 @@ const theme = createTheme({
     components: {
         MuiCssBaseline: {
             styleOverrides: `
+                @font-face {
+                    font-family: 'League_Spartan';
+                    font-display: swap;
+                    font-weight: 400;
+                    src: local('LeagueSpartan'), local('LeagueSpartan_Regular'), url(${LeagueSpartanRegular}), format('ttf');
+                    unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
+                }
+
                 @font-face {
                     font-family: 'League_Spartan';
                     font-display: swap;

@@ -1,16 +1,13 @@
-import * as yup from "yup";
-
-import { ProjectSchema } from "../schemas/index.js";
+import { ProjectSchemaType } from "../models/Project.js";
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import { actionLoadProjects, actionSaveProject } from '../actions/ProjectsReducerActions'
+import { actionLoadProjects, actionSaveProject, actionUpdateProject, actionDeleteProject } from '../actions/ProjectsReducerActions'
 
 import useToken from './useToken'
 
 import AxiosClient, { generateConfig } from '../utils/AxiosClient'
 
-type ProjectType = yup.InferType<typeof ProjectSchema>
 type ResultHandleType = (r:boolean, data:null | unknown) => void
 
 const useProjects = () => {
@@ -25,19 +22,36 @@ const useProjects = () => {
         })
     }
 
-    const saveProject = (project:ProjectType, result:null | ResultHandleType=null) => {
+    const saveProject = (project:ProjectSchemaType, result:null | ResultHandleType=null) => {
         AxiosClient.post("/projects", project, generateConfig(authToken)).then(({ data }) => {
             dispatch(actionSaveProject(data))
             result?.(true, null)
         }).catch(({ response: { data } }) => {
-            console.log("data", data)
+            result?.(false, data)
+        })
+    }
+
+    const updateProject = (id:number, project:ProjectSchemaType, result:null | ResultHandleType=null) => {
+        AxiosClient.put("/projects/"+id, project, generateConfig(authToken)).then(({ data }) => {
+            dispatch(actionUpdateProject(data))
+            result?.(true, null)
+        }).catch(({ response: { data } }) => {
+            result?.(false, data)
+        })
+    }
+
+    const deleteProject = (id:number, result:null | ResultHandleType=null) => {
+        AxiosClient.delete("/projects/"+id, generateConfig(authToken)).then(() => {
+            dispatch(actionDeleteProject(id))
+            result?.(true, null)
+        }).catch(({ response: { data } }) => {
             result?.(false, data)
         })
     }
 
     const getProjectById = (id:number) => {
         return projects.find((project) => {
-            return project.ID == id
+            return project.id == id
         })
     }
 
@@ -46,6 +60,8 @@ const useProjects = () => {
         loading,
         loadProject,
         saveProject,
+        updateProject,
+        deleteProject,
         getProjectById
     }
 }

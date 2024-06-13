@@ -1,4 +1,9 @@
+import * as yup from "yup"
+import { ProjectSchema } from "../schemas";
+
 export interface ProjectType {
-    ID: number;
-    Title: string;
+    id: number;
+    title: string;
 }  
+
+export type ProjectSchemaType = yup.InferType<typeof ProjectSchema>

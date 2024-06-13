@@ -1,7 +1,9 @@
 /* eslint-disable no-case-declarations */
 import { 
     REDU_LOAD_PROJECTS,
-    REDU_SAVE_PROJECTS
+    REDU_SAVE_PROJECTS,
+    REDU_UPDATE_PROJECTS,
+    REDU_DELETE_PROJECTS,
 } from '../reducertypes/projectsReducerTypes.js'
 
 const initialStates = {
@@ -25,6 +27,22 @@ export default function(state = initialStates, action) {
             return {
                 ...state,
                 projects: [...state.projects, action.payload]
+            }
+
+        case REDU_UPDATE_PROJECTS:
+            return {
+                ...state,
+                projects: state.projects.map(project => (project.id == action.payload.id)? action.payload : project)
+            }
+
+        case REDU_DELETE_PROJECTS:
+            const index = state.projects.findIndex(project => project.id === action.payload);
+
+            if (index < 0) return state
+
+            return {
+                ...state,
+                projects: state.projects.splice(index, 0)
             }
 
         default:
