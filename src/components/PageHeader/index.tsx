@@ -38,7 +38,7 @@ import { ERR_TYPE_MESSAGE } from '../../types/errTypes'
 const HeaderContainer = styled('header')(() => ({
     //background: 'red',
     width: '100%',
-    padding: '10px 10px 20px 10px',
+    padding: '10px 10px 15px 10px',
     boxSizing: 'border-box',
     borderBottom: '1px solid rgba(0,0,0,.2)'
 }))

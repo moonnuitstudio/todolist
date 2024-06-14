@@ -11,7 +11,12 @@ import TableBody from '@mui/material/TableBody'
 import TablePagination from '@mui/material/TablePagination'
 
 import  Button from  '@mui/material/Button'
+import  ButtonGroup from  '@mui/material/ButtonGroup'
+
+import FilterListIcon from '@mui/icons-material/FilterList'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
+
+import Skeleton from '@mui/material/Skeleton'
 
 import EnhancedTableHead from './EnhancedTableHead'
 import TaskRow from './TaskRow'
@@ -20,6 +25,8 @@ import { TaskType, createTableTask } from '../../../models/Task'
 
 import useResponsive from '../../../hooks/useResponsive'
 import useModal from '../../../hooks/useModal'
+
+import { useAuth0 } from '@auth0/auth0-react'
 
 // -----------------------
 const rows = [
@@ -72,6 +79,8 @@ const TaskTable = () => {
     const { openModal } = useModal("taskmenu")
     const { isMobile, isTabletOrDesktop } = useResponsive()
 
+    const { isLoading } = useAuth0()
+
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState<keyof TaskType>('title');
     const [page, setPage] = React.useState(0);
@@ -97,8 +106,11 @@ const TaskTable = () => {
 
     return (
         <Box sx={{ paddingTop: '10px', paddingBottom: '10px' }}>
-            <Stack sx={{ width: '100%', paddingBottom: '10px' }} flexDirection="row">
+            <Stack sx={{ width: '100%', paddingBottom: '10px', paddingTop: '5px', gap: '10px' }} flexDirection="row">
                 {isTabletOrDesktop && (<Button sx={{ textTransform: 'capitalize !important' }} variant='outlined' startIcon={<AddCircleIcon />} onClick={() => { openModal() }}>Add Task</Button>)}
+                <ButtonGroup variant="text" >
+                    <Button sx={{ padding: '5px 20px !important', minWidth: '60px !important' }} startIcon={<FilterListIcon />}>Filter</Button>
+                </ButtonGroup>
             </Stack>
             <Paper sx={{ width: '100%', mb: 2, background: 'transparent', boxShadow: 'none !important' }}>
                 <TableContainer sx={{ maxHeight: '500px' }}>
@@ -109,10 +121,18 @@ const TaskTable = () => {
                     >
                         <EnhancedTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort}  />
                         <TableBody>
-                            {visibleRows.map((row, index) => {
+                            {isLoading? (<>
+                                <tr><td colspan="5" style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></td></tr>
+                                <tr><td colspan="5" style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></td></tr>
+                                <tr><td colspan="5" style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></td></tr>
+                                <tr><td colspan="5" style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></td></tr>
+                                <tr><td colspan="5" style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></td></tr>
+                                <tr><td colspan="5" style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></td></tr>
+                            </>) : visibleRows.map((row, index) => {
                                 return (<TaskRow key={row.id}  labelId={`table-task-row-${index}`} row={row} />);
                             })}
                         </TableBody>
+                        
                     </Table>
                 </TableContainer>
                 <TablePagination

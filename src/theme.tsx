@@ -208,7 +208,10 @@ const theme = createTheme({
                     fontFamily: "'Montserrat'",
                     fontWeight: 400,
                     fontSize: '.8rem',
-                    color: 'black !important'
+                    color: 'black !important',
+                    '& .MuiButtonBase-root.MuiTableSortLabel-root svg': {
+                        fontSize: '.8rem'
+                    }
                 }
             }
         },
@@ -295,7 +298,7 @@ const theme = createTheme({
                     paddingBottom: '0px !important'
                 }
             }
-        }
+        },
     }
 })
 
