@@ -23,8 +23,8 @@ const TaskMenuContent = ({ onCloseModal }:TaskMenuContentPropsType) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-        <Box sx={{ flexGrow: '1' }}><Typography variant='h2' sx={{ lineHeight: '1.4rem' }}>Task:</Typography></Box>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', borderBottom: '1px solid rgba(0, 0, 0, .2)', paddingBottom: '5px' }}>
+        <Box sx={{ flexGrow: '1' }}><Typography variant='h2' className='non-mouse-event' sx={{ lineHeight: '1rem', transform: 'translate(0px, 5px)' }}>Task:</Typography></Box>
         <IconButton aria-label="close-modal" onClick={onCloseModal}>
           <CloseIcon />
         </IconButton>

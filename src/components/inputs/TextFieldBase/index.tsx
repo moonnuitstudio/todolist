@@ -86,7 +86,7 @@ const TextFieldBase: React.FC<TextFieldBaseProps> = ({ title, placeholder, id, v
             case "time":
                 return (<InputTime value={fieldValue} disabled={disabled} id={id} placeholder={placeholder} setValue={setValue} error={isErr} />)
             case "textarea":
-                return (<textarea disabled={disabled} className={classnames.join(" ")} style={{width: '100%'}} placeholder={placeholder} {...register(id)} rows={8} cols={50} />)
+                return (<textarea disabled={disabled} className={classnames.join(" ")} style={{width: '100%'}} placeholder={placeholder} {...register(id)} rows={4} cols={10} />)
             case "select": 
                 return (<InputSelect disabled={disabled} id={id} values={values} register={register} err={isErr} />)
             default:

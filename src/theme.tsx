@@ -5,6 +5,7 @@ import LeagueSpartanBold from './assets/fonts/league_spartan/LeagueSpartanBold.t
 import LeagueSpartanBlack from './assets/fonts/league_spartan/LeagueSpartanBlack.ttf'
 import LeagueSpartanSemiBold from './assets/fonts/league_spartan/LeagueSpartanSemiBold.ttf'
 import LeagueSpartanRegular from './assets/fonts/league_spartan/LeagueSpartanRegular.ttf'
+import LeagueSpartanMedium from './assets/fonts/league_spartan/LeagueSpartanMedium.ttf'
 
 import MontserratLight from './assets/fonts/montserrat/MontserratLight.ttf'
 import MontserratRegular from './assets/fonts/montserrat/MontserratRegular.ttf'
@@ -59,8 +60,8 @@ const theme = createTheme({
         h2: {
             color: 'rgba(0,0,0,.7)',
             fontFamily: "'League_Spartan'",
-            fontWeight: '700',
-            fontSize: '1.8rem',
+            fontWeight: '400',
+            fontSize: '1.4rem',
             lineHeight: '1rem',
         },
         h3: {
@@ -114,6 +115,14 @@ const theme = createTheme({
                     font-display: swap;
                     font-weight: 400;
                     src: local('LeagueSpartan'), local('LeagueSpartan_Regular'), url(${LeagueSpartanRegular}), format('ttf');
+                    unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
+                }
+
+                @font-face {
+                    font-family: 'League_Spartan';
+                    font-display: swap;
+                    font-weight: 500;
+                    src: local('LeagueSpartan'), local('LeagueSpartan_Medium'), url(${LeagueSpartanMedium}), format('ttf');
                     unicodeRange: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF;
                 }
 
@@ -255,6 +264,35 @@ const theme = createTheme({
                         boxShadow: '0px 0px 14px -8px rgba(0,0,0,0.66) !important',
                         marginTop: '5px',
                     }
+                }
+            }
+        },
+        MuiAccordion: {
+            styleOverrides: {
+                root: {
+                    '&::before': {
+                        display: 'none !important'
+                    },
+                    '& .MuiButtonBase-root': {
+                        borderBottom: '1px solid rgba(0,0,0,.2)',
+                        fontFamily: "'League_Spartan'",
+                        fontWeight: '400',
+                        lineHeight: '1rem',
+                        fontSize: '1rem',
+                        textTransform: 'capitalize',
+                        minHeight: '48px !important',
+                        '& .MuiAccordionSummary-content': {
+                            margin: '0px !important'
+                        },
+                    }
+                }
+            }
+        },
+        MuiAccordionDetails: {
+            styleOverrides: {
+                root: {
+                    paddingTop: '15px !important',
+                    paddingBottom: '0px !important'
                 }
             }
         }

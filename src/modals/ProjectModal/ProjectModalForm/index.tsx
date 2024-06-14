@@ -7,14 +7,15 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { ProjectSchema } from "../../../schemas"
-import { ProjectSchemaType, ProjectType } from "../../../models/Project";
+import { ProjectSchemaType, ProjectType } from "../../../models/Project"
 
-import TextFieldBase from "../../../components/inputs/TextFieldBase";
+import InputBase from "../../../components/inputs/InputBase";
 
 import Box from '@mui/material/Box'
-import Button from "@mui/material/Button";
+import Button from "@mui/material/Button"
+import ButtonGroup from '@mui/material/ButtonGroup'
 
-import useProjects from "../../../hooks/useProjects";
+import useProjects from "../../../hooks/useProjects"
 import useToast from '../../../hooks/useToast'
 
 import { ERR_TYPE_BY_MULTIPLE_FIELDS } from '../../../types/errTypes'
@@ -28,6 +29,15 @@ const initValues:ProjectSchemaType = {
 const Form = styled('form')(() => ({
     width: '100%',
     paddingTop: '20px'
+}))
+
+const CustomButton = styled(Button)(() => ({
+    fontFamily: '"Montserrat" !important',
+    fontSize: '.9rem',
+    fontWeight: '400',
+    textTransform: 'capitalize',
+    paddingLeft: '10px',
+    paddingRight: '10px',
 }))
 
 interface ProjectModalFormProp {
@@ -101,11 +111,12 @@ const ProjectModalForm = ({ isEdit, project, handleCloseModal }:ProjectModalForm
     return (
         <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
-                <TextFieldBase id="title" title='Project Name*' placeholder="Default" />
+                <InputBase id="title" title='Project Name*' placeholder="Default" />
                 <Box mt={2} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', gap: '10px' }}>
-                    <Button onClick={() => { methods.reset() }} disableFocusRipple disableRipple>Reset Form</Button>
-                    <span className='non-mouse-event'>/</span>
-                    <Button variant="outlined" type="submit" size="large" sx={{ paddingTop: '12px', paddingBottom: '12px' }}>{isEdit? 'Update' : 'Register'}</Button>
+                    <ButtonGroup variant="text">
+                        <CustomButton onClick={() => { methods.reset() }} disableFocusRipple disableRipple>Reset Form</CustomButton>
+                        <CustomButton type="submit" sx={{ textTransform: 'uppercase', fontWeight: '500' }}>{isEdit? 'Update' : 'Register'}</CustomButton>
+                    </ButtonGroup>
                 </Box>
             </Form>
         </FormProvider>

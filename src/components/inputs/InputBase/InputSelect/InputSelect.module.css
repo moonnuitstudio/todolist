@@ -1,0 +1,13 @@
+.selectBase {
+    font-family: "Montserrat" !important;
+    font-size: .9rem;
+    font-weight: 400;
+    flex-grow: 1;
+    padding: 12px 5px 12px 10px;
+    background: transparent;
+    border: none !important;
+    outline: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+}

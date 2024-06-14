@@ -66,8 +66,8 @@ const ProjectModal = () => {
         >
             <Slide direction="up" in={open} mountOnEnter unmountOnExit>
                 <ModalBox ref={modalBoxRef} boxwidth={modalBoxWidth} boxheight={modalBoxheight}>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                        <Box sx={{ flexGrow: '1' }}><Typography variant='h2' sx={{ lineHeight: '1.4rem', fontSize: '1.6rem' }}>Projects:</Typography></Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingBottom: '5px' }}>
+                        <Box sx={{ flexGrow: '1' }}><Typography variant='h2' className='non-mouse-event' sx={{ lineHeight: '1rem', transform: 'translate(0px, 5px)' }}>Project:</Typography></Box>
                         <IconButton aria-label="close-modal" onClick={closeModal}>
                             {isMobile? (<KeyboardArrowDownIcon />):(<CloseIcon />)}
                         </IconButton>

@@ -11,11 +11,13 @@ import useModal from '../../../hooks/useModal'
 
 const BoxContainer = styled(Box)(({ theme }) => ({
     width: 550,
+    height: '100%',
     background: 'transparent !important',
-    padding: '20px 20px 0px',
+    padding: '20px 20px 20px',
+    display: 'flex',
+    flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
         width: '100vw',
-        paddingBottom: '50px'
     }
 }))
 
