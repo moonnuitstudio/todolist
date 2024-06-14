@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { actionOpenModal, actionCloseModal } from '../actions/ModalReducerActions'
 
-import { TableTaskType } from "../models/Task"
+import { TableTaskType } from "../models/Todo"
 
 const useModal = (title:string) => {
     const dispatch = useDispatch()

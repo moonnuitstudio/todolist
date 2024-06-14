@@ -1,5 +1,5 @@
 
-import { createTableTask } from "../models/Task"
+import { createTableTask } from "../models/Todo"
 
 const rows = [
     createTableTask(1, 'Cupcake', '02/21/2024', false, 'default', false),

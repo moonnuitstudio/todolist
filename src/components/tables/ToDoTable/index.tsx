@@ -13,7 +13,7 @@ import TableRow from '@mui/material/TableRow'
 
 import Paper from '@mui/material/Paper'
 
-import { TableTaskType, createTableTask } from '../../../models/Task'
+import { TableTaskType, createTableTask } from '../../../models/Todo'
 
 import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToolbar'

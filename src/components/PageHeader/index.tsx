@@ -62,7 +62,7 @@ const CustomMenu = styled(Menu)(({ theme }) => ({
 }))
 
 interface ProjectPagePropsType {
-    project: null | ProjectType;
+    project?: null | ProjectType;
     useproject?: boolean;
 }
 

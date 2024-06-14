@@ -7,7 +7,7 @@ import {
     REDU_CLOSE_MODAL
 } from "../reducertypes/modalReducerTypes.js"
 
-import { TableTaskType } from "../models/Task.js"
+import { TableTaskType } from "../models/Todo.js"
 
 type ProjectType = yup.InferType<typeof ProjectSchema>
 

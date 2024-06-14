@@ -4,6 +4,8 @@ import Box from '@mui/material/Box'
 
 import PageHeader from '../components/PageHeader'
 
+import TaskTable from '../components/tables/TaskTable'
+
 const CustomContainer = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   [theme.breakpoints.up('lg')]: {
@@ -21,6 +23,7 @@ const NewDashboardPage = () => {
   return (
     <CustomContainer>
       <PageHeader />
+      <TaskTable />
     </CustomContainer>
   )
 }

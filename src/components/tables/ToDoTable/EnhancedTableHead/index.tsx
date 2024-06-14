@@ -10,7 +10,7 @@ import Checkbox from '@mui/material/Checkbox'
 
 import { visuallyHidden } from '@mui/utils';
 
-import { TableTaskType, tableTaskHeadCells, tableTaskTableVersionHeadCells } from '../../../../models/Task';
+import { TableTaskType, tableTaskHeadCells, tableTaskTableVersionHeadCells } from '../../../../models/Todo';
 
 import useResponsive from '../../../../hooks/useResponsive'
 

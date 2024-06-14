@@ -17,7 +17,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import Divider from '@mui/material/Divider'
 
-import { TableTaskType } from '../../../models/Task'
+import { TableTaskType } from '../../../models/Todo'
 
 import useModal from '../../../hooks/useModal'
 

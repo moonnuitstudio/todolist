@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit'
 
 import useResponsive from '../../../../hooks/useResponsive'
 
-import { TableTaskType } from '../../../../models/Task'
+import { TableTaskType } from '../../../../models/Todo'
 
 import useModal from '../../../../hooks/useModal'
 
@@ -52,6 +52,11 @@ const ToDoRow = ({ isItemSelected, labelId, row, handleClick }:ToDoRowType) => {
     const openSubMenu = React.useMemo(() => Boolean(mousePosition), [mousePosition])
     
     const handleSubMenuClose = () => { setMousePosition(null); };
+
+    const editOptionHandle = () => {
+        onClose()
+        openModal(task)
+    }
 
     return (<>
         <ToDoTableRow

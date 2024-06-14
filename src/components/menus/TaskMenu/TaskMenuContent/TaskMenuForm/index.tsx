@@ -20,7 +20,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 import EventFormTitle from "../../../../forms/decorations/EventFormTitle";
 
-import { TableTaskType } from "../../../../../models/Task";
+import { TableTaskType } from "../../../../../models/Todo";
 
 import useProjects from "../../../../../hooks/useProjects";
 

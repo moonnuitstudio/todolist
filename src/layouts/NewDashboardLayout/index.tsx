@@ -12,8 +12,11 @@ import MainMenu from "./MainMenu"
 import { useAuth0 } from "@auth0/auth0-react"
 import { useResizeDetector } from "react-resize-detector"
 
+import MobilSubMenu from "../../components/menus/MobilSubMenu"
+
 import useToken from "../../hooks/useToken"
 import useProjects from "../../hooks/useProjects"
+import useResponsive from "../../hooks/useResponsive"
 
 const DashboardContainer = styled(Container)(() => ({
     width: '100vw !important',
@@ -39,6 +42,8 @@ const BoxContentContainer = styled(Stack, {
 }))
 
 const NewDashboardLayout = () => {
+
+    const { isMobile } = useResponsive()
 
     const { saveToken, token } = useToken()
     const { loadProject } = useProjects()
@@ -82,6 +87,7 @@ const NewDashboardLayout = () => {
             <BoxContentContainer headerheight={headerHeight}>
                 <MainMenu menuWidth={250} tabletMenuWidth={350} open={menuOpen} onMenuClose={() => setMenuOpen(false)} />
                 <Outlet />
+                {isMobile && (<MobilSubMenu />)}
             </BoxContentContainer>
         </DashboardContainer>
     )

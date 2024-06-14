@@ -186,9 +186,10 @@ const theme = createTheme({
         MuiTableSortLabel: {
             styleOverrides: {
                 root: {
-                    fontFamily: "'Montserrat'",
-                    fontWeight: 700,
-                    color: 'rgba(0, 0, 0, .7) !important'
+                    fontFamily: "'League_Spartan'",
+                    fontWeight: 400,
+                    fontSize: '1rem',
+                    color: 'black !important'
                 }
             }
         },
@@ -197,6 +198,8 @@ const theme = createTheme({
                 root: {
                     fontFamily: "'Montserrat'",
                     fontWeight: 400,
+                    fontSize: '.8rem',
+                    color: 'black !important'
                 }
             }
         },
@@ -205,7 +208,7 @@ const theme = createTheme({
                 root: {
                     '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
                         fontFamily: "'Montserrat'",
-                        fontWeight: 700,
+                        fontWeight: 400,
                         color: 'rgba(0, 0, 0, .7) !important',
                         pointerEvents: 'none',
                         userSelect: 'none'
@@ -240,6 +243,18 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     backgroundColor: grey[400],
+                }
+            }
+        },
+        MuiMenu: {
+            styleOverrides: {
+                root: {
+                    '& .MuiPaper-root': {
+                        background: palette.background.default,
+                        border: '1px solid rgba(0, 0, 0, .3)',
+                        boxShadow: '0px 0px 14px -8px rgba(0,0,0,0.66) !important',
+                        marginTop: '5px',
+                    }
                 }
             }
         }

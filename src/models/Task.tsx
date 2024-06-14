@@ -1,9 +1,9 @@
-export interface TableTaskType {
+export interface TaskType {
     id: number;
     title: string;
     due: string;
-    completed: boolean;
-    project: string;
+    status: string;
+    project: number;
     started: boolean;
 }  
 
@@ -11,15 +11,15 @@ export function createTableTask(
     id: number,
     title: string,
     due: string,
-    completed: boolean,
-    project: string,
+    status: string,
+    project: number,
     started: boolean
-): TableTaskType {
+): TaskType {
     return {
       id,
       title,
       due,
-      completed,
+      status,
       project,
       started
     };
@@ -27,53 +27,49 @@ export function createTableTask(
 
 export interface TableTaskHeadCell {
     disablePadding: boolean;
-    id: keyof TableTaskType;
+    id: keyof TaskType;
     label: string;
     numeric: boolean;
 }  
 
-export interface ModalTaskType {
-  
-}
-
-export const tableTaskHeadCells: readonly TableTaskHeadCell[] = [
+export const TBLHEADTASK: readonly TableTaskHeadCell[] = [
     {
-      id: 'title',
-      numeric: false,
-      disablePadding: true,
-      label: 'Task',
-    },
-    {
-      id: 'project',
-      numeric: false,
-      disablePadding: true,
-      label: 'Project',
-    },
-    {
-      id: 'due',
-      numeric: false,
-      disablePadding: true,
-      label: 'Due',
-    },
-    {
-      id: 'started',
-      numeric: true,
-      disablePadding: false,
-      label: 'Started',
+        id: 'title',
+        numeric: false,
+        disablePadding: true,
+        label: 'Task',
+    },{
+        id: 'status',
+        numeric: false,
+        disablePadding: true,
+        label: 'Status',
+    },{
+        id: 'due',
+        numeric: false,
+        disablePadding: true,
+        label: 'Due',
     }
 ];
 
-export const tableTaskTableVersionHeadCells: readonly TableTaskHeadCell[] = [
-  {
-    id: 'title',
-    numeric: false,
-    disablePadding: true,
-    label: 'Task',
-  },
-  {
-    id: 'started',
-    numeric: true,
-    disablePadding: false,
-    label: 'Started',
-  }
+export const TABLETBLHEADTASK: readonly TableTaskHeadCell[] = [
+    {
+        id: 'title',
+        numeric: false,
+        disablePadding: true,
+        label: 'Task',
+    },{
+        id: 'due',
+        numeric: false,
+        disablePadding: true,
+        label: 'Due',
+    }
+];
+
+export const MOBILETBLHEADTASK: readonly TableTaskHeadCell[] = [
+    {
+        id: 'title',
+        numeric: false,
+        disablePadding: true,
+        label: 'Task',
+    }
 ];

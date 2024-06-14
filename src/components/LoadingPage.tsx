@@ -11,7 +11,8 @@ const ContainerBox = styled(Box)(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    background: 'rgba(0, 0, 0, .15)'
+    background: 'rgba(0, 0, 0, .15)',
+    zIndex: '9999'
 }))
 
 const LoadingPage = () => {
