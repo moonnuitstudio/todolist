@@ -29,22 +29,13 @@ import useResponsive from '../../../hooks/useResponsive'
 import useModal from '../../../hooks/useModal'
 import useTasks from '../../../hooks/useTasks'
 import useToken from '../../../hooks/useToken'
+import useToast from '../../../hooks/useToast'
 
 import { useAuth0 } from '@auth0/auth0-react'
 
 // -----------------------
 
 type Order = 'asc' | 'desc';
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
 
 const TaskTable = () => {
     const [loadingtable, setLoadingTable] = React.useState(true)
@@ -62,7 +53,8 @@ const TaskTable = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { getAllTasks, forceReloadTask, reload } = useTasks()
+    const { getAllTasks, forceReloadTask, updateStarOnTask, reload } = useTasks()
+    const { showSuccessToast, showErrorToast } = useToast()
 
     const handleRequestSort = ( event: React.MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -85,6 +77,14 @@ const TaskTable = () => {
         setPage(0)
         forceReloadTask()
         setLoadingTable(true)
+    }
+
+    const handleStartRow = (task) => {
+        updateStarOnTask(task.id, task.starred, (status) => {
+            if (status) showSuccessToast("Task Updated")
+            else showErrorToast("ERR")
+        })
+        setRows(rows.map(row => (row.id == task.id)? task : row))
     }
 
     React.useEffect(() => {
@@ -136,7 +136,7 @@ const TaskTable = () => {
                             {(isLoading || loadingtable)? (<>
                                 {[...Array(rowsPerPage)].map(() => (<TableRow><TableCell colSpan={6} style={{ padding: '2px 0px' }}><Skeleton variant="rectangular" width="100%" height={28} /></TableCell></TableRow>))}
                             </>) : (<>
-                                {rows.map((row, index) => (<TaskRow key={row.id}  labelId={`table-task-row-${index}`} row={row} />))}
+                                {rows.map((row, index) => (<TaskRow key={row.id}  labelId={`table-task-row-${index}`} row={row} onChangeStar={handleStartRow} />))}
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: (33) * emptyRows, }} >
                                         <TableCell colSpan={6} />

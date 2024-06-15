@@ -22,7 +22,10 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 
 import useResponsive from '../../../../hooks/useResponsive'
 
+import Tooltip from '@mui/material/Tooltip'
+
 import { TaskType } from '../../../../models/Task'
+import useModal from '../../../../hooks/useModal'
 
 interface MousePositionType {
     x: number;
@@ -51,13 +54,17 @@ const MenuListItemText = styled(ListItemText)(() => ({
     color: 'black !important'
 }))
 
+type OnChangeStarType = (task:unknown) => void
+
 interface TaskRowPropsType {
     labelId: string;
     row: TaskType;
+    onChangeStar?: null | OnChangeStarType;
 }
 
 
-const TaskRow = ({ labelId, row }:TaskRowPropsType) => {
+const TaskRow = ({ labelId, row, onChangeStar=null }:TaskRowPropsType) => {
+    const { openModal: openTaskMenu } = useModal("taskmenu")
 
     const { isTabletOrDesktop, isDesktopVersion } = useResponsive()
 
@@ -78,7 +85,13 @@ const TaskRow = ({ labelId, row }:TaskRowPropsType) => {
 
     const editOptionHandle = () => {
         setMousePosition(null)
-        //openModal(task)
+        openTaskMenu(row)
+    }
+
+    const handleChangeStar = () => {
+        row.starred = !row.starred
+        onChangeStar?.(row)
+        setMousePosition(null)
     }
 
     return (
@@ -87,7 +100,7 @@ const TaskRow = ({ labelId, row }:TaskRowPropsType) => {
             hover
             tabIndex={-1}
             sx={{ cursor: 'pointer' }}
-            onDoubleClick={() => {  }}
+            onDoubleClick={() => { editOptionHandle() }}
             onContextMenu={(event) => {
                 event.preventDefault()
                 
@@ -100,14 +113,20 @@ const TaskRow = ({ labelId, row }:TaskRowPropsType) => {
             }}
         >
             <CustomCell component="th" id={labelId} scope="row" padding="none"> 
-                <IconButton aria-label="starred" disableRipple><StarBorderIcon sx={{ fontSize: '1rem' }} /></IconButton>
+                <IconButton onClick={handleChangeStar} aria-label="starred" disableRipple>
+                    {row.starred? (<StarIcon sx={{ fontSize: '1rem' }} />) : (<StarBorderIcon sx={{ fontSize: '1rem' }} />)}
+                </IconButton>
                 {row.title}
             </CustomCell>
             { isDesktopVersion && (<CustomCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 130 }}>{ row.project && row.project instanceof Object && row.project.title}</CustomCell>) }
             { isDesktopVersion && (<CustomCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 130 }}>{row.status}</CustomCell>) }
-            { isTabletOrDesktop && (<CustomCell align="left" style={{ width: 160 }}>{row.due_date}</CustomCell>) }
+            { isTabletOrDesktop && (<CustomCell align="left" style={{ width: 160 }}>
+                <Tooltip title={`${row.due_date} ${row.due_time}`} placement="left">
+                    {row.due_date}
+                </Tooltip>
+            </CustomCell>) }
             <CustomCell align="right" style={{ width: 20 }}>
-                <IconButton aria-label="edit" disableRipple onClick={() => { /*openModal(row)*/ }}><ArrowForwardIosIcon sx={{ fontSize: '1rem' }} /></IconButton>
+                <IconButton aria-label="edit" disableRipple onClick={() => { editOptionHandle() }}><ArrowForwardIosIcon sx={{ fontSize: '1rem' }} /></IconButton>
             </CustomCell>
         </CustomRow>
 
@@ -126,11 +145,11 @@ const TaskRow = ({ labelId, row }:TaskRowPropsType) => {
                     </MenuListItemIcon>
                     <MenuListItemText>Edit</MenuListItemText>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={handleChangeStar}>
                     <MenuListItemIcon>
-                        { row.started? (<StarIcon sx={{ fontSize: '1rem' }}/>) : (<StarBorderIcon sx={{ fontSize: '1rem' }} />) }
+                        { row.starred? (<StarIcon sx={{ fontSize: '1rem' }}/>) : (<StarBorderIcon sx={{ fontSize: '1rem' }} />) }
                     </MenuListItemIcon>
-                    <MenuListItemText>Mark as started</MenuListItemText>
+                    <MenuListItemText>{ row.starred? "Remove as started" : "Mark as started" }</MenuListItemText>
                 </MenuItem>
                 <Divider/>
                 <MenuItem>

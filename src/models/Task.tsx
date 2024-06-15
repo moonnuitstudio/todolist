@@ -9,7 +9,7 @@ export interface TaskType {
     due: string;
     status: string;
     project: number;
-    started: boolean;
+    starred: boolean;
 }  
 
 export function createTableTask(
@@ -18,7 +18,7 @@ export function createTableTask(
     due: string,
     status: string,
     project: number,
-    started: boolean
+    starred: boolean
 ): TaskType {
     return {
       id,
@@ -26,7 +26,7 @@ export function createTableTask(
       due,
       status,
       project,
-      started
+      starred
     };
 }
 

@@ -32,6 +32,14 @@ const useTasks = () => {
         })
     }
 
+    const updateStarOnTask = (id:number, star:boolean, result:null | ResultHandleType=null) => {
+        AxiosClient.put(`/tasks/${id}/star`, { starred: star }, generateConfig(authToken)).then(() => {
+            result?.(true, null)
+        }).catch(({ response: { data } }) => {
+            result?.(false, null)
+        })
+    }
+
     const getAllTasks = (token: null | string = null, query: QueryTaskType, result:null | ResultHandleType=null) => {
         AxiosClient.get(`/tasks?limit=${query.limit}&page=${query.page}&orderby=${query.orderBy}&order=${query.order}`, generateConfig(token? token : authToken)).then(({ data }) => {
             dispatch(actionStopReloadTask())
@@ -48,7 +56,8 @@ const useTasks = () => {
         reload,
         saveTask,
         getAllTasks,
-        forceReloadTask
+        forceReloadTask,
+        updateStarOnTask
     }
 }
 
