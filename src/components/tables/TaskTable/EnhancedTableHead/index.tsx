@@ -16,7 +16,7 @@ import useResponsive from '../../../../hooks/useResponsive'
 type Order = 'asc' | 'desc';
 
 interface EnhancedTableHeadPropsType {
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof TaskType) => void;
+    onRequestSort: (event: React.MouseEvent<unknown>, property: string) => void;
     order: Order;
     orderBy: string;
 }
@@ -25,7 +25,7 @@ const EnhancedTableHead = ({ order, orderBy, onRequestSort }: EnhancedTableHeadP
 
     const { isMobile, isTabletOrMobile } = useResponsive()
 
-    const createSortHandler = (property: keyof TaskType) => (event: React.MouseEvent<unknown>) => { onRequestSort(event, property); }
+    const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => { onRequestSort(event, property); }
     
     const HEADS = React.useMemo(() => {
 
@@ -49,7 +49,7 @@ const EnhancedTableHead = ({ order, orderBy, onRequestSort }: EnhancedTableHeadP
                         <TableSortLabel
                                 active={orderBy === headCell.id}
                                 direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={createSortHandler(headCell.id)}
+                                onClick={createSortHandler(headCell.order)}
                             >
                                 {headCell.label}
                                 {orderBy === headCell.id ? (

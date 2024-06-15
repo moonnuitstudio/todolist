@@ -11,7 +11,10 @@ import AxiosClient, { generateConfig } from '../utils/AxiosClient'
 type ResultHandleType = (r:boolean, data:null | unknown) => void
 
 interface QueryTaskType {
-    limit: number
+    limit: number,
+    page: number,
+    orderBy: string,
+    order: string,
 }
 
 const useTasks = () => {
@@ -30,7 +33,7 @@ const useTasks = () => {
     }
 
     const getAllTasks = (token: null | string = null, query: QueryTaskType, result:null | ResultHandleType=null) => {
-        AxiosClient.get(`/tasks?limit=${query.limit}`, generateConfig(token? token : authToken)).then(({ data }) => {
+        AxiosClient.get(`/tasks?limit=${query.limit}&page=${query.page}&orderby=${query.orderBy}&order=${query.order}`, generateConfig(token? token : authToken)).then(({ data }) => {
             dispatch(actionStopReloadTask())
             result?.(true, data)
         }).catch(({ response: { data } }) => {

@@ -35,6 +35,7 @@ export interface TableTaskHeadCell {
     id: keyof TaskType;
     label: string;
     numeric: boolean;
+    order: string;
 }  
 
 export const TBLHEADTASK: readonly TableTaskHeadCell[] = [
@@ -43,21 +44,25 @@ export const TBLHEADTASK: readonly TableTaskHeadCell[] = [
         numeric: false,
         disablePadding: true,
         label: 'Task',
+        order: 'title',
     },{
         id: 'project',
         numeric: false,
         disablePadding: true,
         label: 'Project',
+        order: 'project_id',
     },{
         id: 'status',
         numeric: false,
         disablePadding: true,
         label: 'Status',
+        order: 'status',
     },{
         id: 'due',
         numeric: false,
         disablePadding: true,
         label: 'Due',
+        order: 'due_date',
     }
 ];
 
@@ -67,11 +72,13 @@ export const TABLETBLHEADTASK: readonly TableTaskHeadCell[] = [
         numeric: false,
         disablePadding: true,
         label: 'Task',
+        order: 'title',
     },{
         id: 'due',
         numeric: false,
         disablePadding: true,
         label: 'Due',
+        order: 'due_date',
     }
 ];
 
@@ -81,5 +88,6 @@ export const MOBILETBLHEADTASK: readonly TableTaskHeadCell[] = [
         numeric: false,
         disablePadding: true,
         label: 'Task',
+        order: 'title',
     }
 ];

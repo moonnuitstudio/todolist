@@ -46,29 +46,10 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     return 0;
 }
 
-function getComparator<Key extends keyof any>( order: Order, orderBy: Key ): ( a: { [key in Key]: number | string }, b: { [key in Key]: number | string } ) => number {
-    return order === 'desc'
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-    
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) {
-            return order;
-        }
-        return a[1] - b[1];
-    });
-    
-    return stabilizedThis.map((el) => el[0]);
-}
-
 const TaskTable = () => {
     const [loadingtable, setLoadingTable] = React.useState(true)
     const [rows, setRows] = React.useState([])
+    const [totalrows, setTotalRows] = React.useState(0)
     
     const { token } = useToken()
     const { openModal } = useModal("taskmenu")
@@ -77,31 +58,33 @@ const TaskTable = () => {
     const { isLoading, isAuthenticated } = useAuth0()
 
     const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState<keyof TaskType>('title');
+    const [orderBy, setOrderBy] = React.useState<string>('title');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     const { getAllTasks, forceReloadTask, reload } = useTasks()
 
-    const handleRequestSort = ( event: React.MouseEvent<unknown>, property: keyof TaskType) => {
+    const handleRequestSort = ( event: React.MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
+        forceReloadTask()
+        setLoadingTable(true)
     }
 
-    const visibleRows = React.useMemo<TaskType[]>( () => 
-        stableSort<TaskType>([...rows], getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage ),
-        [order, orderBy, page, rowsPerPage, rows]
-    )
+    const emptyRows = React.useMemo<number>( () => (page > 0 )? rowsPerPage - rows.length : 0, [page, rowsPerPage, rows])
 
-    const emptyRows = React.useMemo<number>( () => page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0, [page, rowsPerPage, rows])
-
-
-    const handleChangePage = (event: unknown, newPage: number) => { setPage(newPage); }
+    const handleChangePage = (event: unknown, newPage: number) => { 
+        setPage(newPage)
+        forceReloadTask()
+        setLoadingTable(true)
+    }
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        setRowsPerPage(parseInt(event.target.value, 10))
+        setPage(0)
+        forceReloadTask()
+        setLoadingTable(true)
     }
 
     React.useEffect(() => {
@@ -109,20 +92,29 @@ const TaskTable = () => {
     }, [])
 
     React.useEffect(() => {
+        if (isMobile) {
+            setRowsPerPage(100)
+            setPage(0)
+            forceReloadTask()
+            setLoadingTable(true)
+        }
+    }, [isMobile, setRowsPerPage, setPage, forceReloadTask])
+
+    React.useEffect(() => {
         if (isLoading || !isAuthenticated || !token || !reload) return
 
         const limit = rowsPerPage
 
-        getAllTasks(token, { limit }, (status, data) => {
+        getAllTasks(token, { limit, page, orderBy, order}, (status, data) => {
 
             if (status) {
-                console.log(data)
-                setRows(data)
+                setTotalRows(data.total)
+                setRows(data.tasks)
             }
 
             setLoadingTable(false)
         })
-    }, [isLoading, isAuthenticated, getAllTasks, token, reload])
+    }, [isLoading, isAuthenticated, getAllTasks, token, reload, rowsPerPage, page, orderBy, order])
 
     return (
         <Box sx={{ paddingTop: '10px', paddingBottom: '10px' }}>
@@ -142,14 +134,9 @@ const TaskTable = () => {
                         <EnhancedTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort}  />
                         <TableBody>
                             {(isLoading || loadingtable)? (<>
-                                <TableRow><TableCell colSpan={6} style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></TableCell></TableRow>
-                                <TableRow><TableCell colSpan={6} style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></TableCell></TableRow>
-                                <TableRow><TableCell colSpan={6} style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></TableCell></TableRow>
-                                <TableRow><TableCell colSpan={6} style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></TableCell></TableRow>
-                                <TableRow><TableCell colSpan={6} style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></TableCell></TableRow>
-                                <TableRow><TableCell colSpan={6} style={{ padding: '5px 0px' }}><Skeleton variant="rectangular" width="100%" height={25} /></TableCell></TableRow>
+                                {[...Array(rowsPerPage)].map(() => (<TableRow><TableCell colSpan={6} style={{ padding: '2px 0px' }}><Skeleton variant="rectangular" width="100%" height={28} /></TableCell></TableRow>))}
                             </>) : (<>
-                                {visibleRows.map((row, index) => (<TaskRow key={row.id}  labelId={`table-task-row-${index}`} row={row} />))}
+                                {rows.map((row, index) => (<TaskRow key={row.id}  labelId={`table-task-row-${index}`} row={row} />))}
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: (33) * emptyRows, }} >
                                         <TableCell colSpan={6} />
@@ -163,7 +150,7 @@ const TaskTable = () => {
                 <TablePagination
                     rowsPerPageOptions={isMobile? [] : [5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={totalrows}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
