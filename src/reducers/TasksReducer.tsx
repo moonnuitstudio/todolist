@@ -1,14 +1,31 @@
+import {
+    REDU_RELOAD_TASKS,
+    REDU_STOPRELOAD_TASKS
+} from '../reducertypes/taskReducerTypes.js'
 
-import { createTableTask } from "../models/Todo"
-
-const rows = [
-    createTableTask(1, 'Cupcake', '02/21/2024', false, 'default', false),
-    createTableTask(2, 'Donut', '02/21/2024', false, 'default', false),
-    createTableTask(3, 'Eclair', '02/21/2024', false, 'default', false),
-    createTableTask(4, 'Frozen yoghurt', '02/21/2024', false, 'default', false),
-    createTableTask(5, 'Gingerbread', '02/21/2024', false, 'default', false),
-];
-  
 const initialStates = {
-    tasks: rows
+    reload: true,
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export default function(state = initialStates, action) {
+    const { type } = action
+
+    switch(type) {
+
+        case REDU_RELOAD_TASKS:
+            return {
+                ...state,
+                reload: true,
+            }
+
+        case REDU_STOPRELOAD_TASKS:
+            return {
+                ...state,
+                reload: false,
+            }
+
+        default:
+            return state
+    }
 }

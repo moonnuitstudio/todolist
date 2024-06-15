@@ -5,12 +5,12 @@ export const TaskSchema = yup.object({
     description: yup.string(),
     status: yup.string(),
     project_id: yup.number().required('Project is required'),
-    duedate: yup.date().nullable().typeError("Please enter a valid date").when(['duetime'], ([duetime], schema) => {
-        if (duetime && duetime !== "") return schema.required("Due date is required")
+    due_date: yup.date().nullable().typeError("Please enter a valid date").when(['due_time'], ([due_time], schema) => {
+        if (due_time && due_time !== "") return schema.required("Due date is required")
 
         return schema
     }),
-    duetime: yup.string(),
+    due_time: yup.string(),
 })
 
 export const ProjectSchema = yup.object({

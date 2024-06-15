@@ -44,6 +44,11 @@ export const TBLHEADTASK: readonly TableTaskHeadCell[] = [
         disablePadding: true,
         label: 'Task',
     },{
+        id: 'project',
+        numeric: false,
+        disablePadding: true,
+        label: 'Project',
+    },{
         id: 'status',
         numeric: false,
         disablePadding: true,

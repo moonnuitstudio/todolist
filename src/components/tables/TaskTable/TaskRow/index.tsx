@@ -103,8 +103,9 @@ const TaskRow = ({ labelId, row }:TaskRowPropsType) => {
                 <IconButton aria-label="starred" disableRipple><StarBorderIcon sx={{ fontSize: '1rem' }} /></IconButton>
                 {row.title}
             </CustomCell>
+            { isDesktopVersion && (<CustomCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 130 }}>{ row.project && row.project instanceof Object && row.project.title}</CustomCell>) }
             { isDesktopVersion && (<CustomCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 130 }}>{row.status}</CustomCell>) }
-            { isTabletOrDesktop && (<CustomCell align="left" style={{ width: 160 }}>{row.due}</CustomCell>) }
+            { isTabletOrDesktop && (<CustomCell align="left" style={{ width: 160 }}>{row.due_date}</CustomCell>) }
             <CustomCell align="right" style={{ width: 20 }}>
                 <IconButton aria-label="edit" disableRipple onClick={() => { /*openModal(row)*/ }}><ArrowForwardIosIcon sx={{ fontSize: '1rem' }} /></IconButton>
             </CustomCell>

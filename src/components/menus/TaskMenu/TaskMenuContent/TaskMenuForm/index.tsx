@@ -25,9 +25,14 @@ import StarBorderIcon from '@mui/icons-material/StarBorder'
 import InputBase from "../../../../inputs/InputBase"
 
 import { TableTaskType } from "../../../../../models/Todo"
+import { prepareDate } from '../../../../../utils/datetools'
 
 import useProjects from "../../../../../hooks/useProjects"
 import useTasks from "../../../../../hooks/useTasks"
+import useToast from "../../../../../hooks/useToast"
+import useModal from "../../../../../hooks/useModal"
+
+import { ERR_TYPE_BY_MULTIPLE_FIELDS } from "../../../../../types/errTypes"
 
 type FormFields = yup.InferType<typeof TaskSchema>
 
@@ -67,13 +72,15 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
 
     const { projects } = useProjects()
     const { saveTask } = useTasks()
+    const { showErrorToast, showSuccessToast } = useToast()
+    const { closeModal: closeTaskModal } = useModal("taskmenu")
 
     const defaultValues = React.useMemo(() => {
         return isEdit? {
             title: task.title,
             description: '',
-            duedate: null,
-            duetime: ''
+            due_date: null,
+            due_time: ''
         } : initValues
     }, [isEdit, task])
 
@@ -95,12 +102,31 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
         mode: "onChange"
     });
 
+    const showErrFields = (data:unknown) => {
+        const { err_type } = data
+        
+        switch(err_type) {
+            case ERR_TYPE_BY_MULTIPLE_FIELDS:
+                const { fields } = data
+                
+                for (var field in fields) {
+                    methods.setError(field.toLowerCase(), { type: 'custom', message: fields[field] })
+                }
+                
+                break;
+        }
+    }
+
     const onSubmit = (data:FormFields) => {
+        data.due_date = new Date(prepareDate(data.due_date))
+
         saveTask(data, (status, _data) => {
             if (status) {
-                console.log('ok:', _data)
+                showSuccessToast("New task has been successfully registered.")
+                closeTaskModal()
             } else {
-                console.log('err:', _data)
+                showErrFields(_data)
+                showErrorToast("The task could not be registered.")
             }
         })
     }
@@ -129,10 +155,10 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
                         <AccordionDetails>
                             <Grid container>
                                 <Grid item xs={8} pr={2}>
-                                    <InputBase id="duedate" title='Date' placeholder="Start date" type="date" defaultvalue={initValues.duedate} minDate={new Date()} />
+                                    <InputBase id="due_date" title='Date' placeholder="Start date" type="date" defaultvalue={initValues.duedate} minDate={new Date()} />
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <InputBase id="duetime" title='Time' placeholder="HH:MM" type="time" />
+                                    <InputBase id="due_time" title='Time' placeholder="HH:MM" type="time" />
                                 </Grid>
                             </Grid>
                         </AccordionDetails>
