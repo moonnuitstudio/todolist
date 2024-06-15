@@ -43,7 +43,7 @@ const ProfileAvatar = () => {
 
     const openSubMenu = React.useMemo(() => Boolean(anchorElUser), [anchorElUser])
 
-    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget); console.log(event) }    
+    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => { setAnchorElUser(event.currentTarget) }    
     const handleCloseUserMenu = () => { setAnchorElUser(null) }
 
     return (

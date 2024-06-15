@@ -59,21 +59,21 @@ const SelectElement = styled(Select)(() => ({
 
 const InputSelect = ({ id, value, setValue, err=false, disabled=false, values=[] }:InputSelectPropsTypes) => {
 
-    const theme = useTheme()
+    // const theme = useTheme()
 
-    const selectColor = React.useMemo(() => {
-        if (disabled) return 'rgba(0,0,0,.3)'
-        else if (err) return 'rgb(142, 49, 49)'
+    // const selectColor = React.useMemo(() => {
+    //     if (disabled) return 'rgba(0,0,0,.3)'
+    //     else if (err) return 'rgb(142, 49, 49)'
 
-        return '#206C65'
-    }, [disabled, err])
+    //     return '#206C65'
+    // }, [disabled, err])
 
     const handleChange = (event: SelectChangeEvent) => {
         setValue(id, event.target.value, { shouldValidate: true }); 
     };
 
     return (
-        <SelectBox selectColor={selectColor}>
+        <SelectBox>
             <FormControl sx={{ width: '100%', padding: '0px', margin: '0px' }}>
                 <SelectElement 
                     id={`input-${id}`} 

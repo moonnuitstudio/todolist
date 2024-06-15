@@ -134,7 +134,7 @@ const MainMenuContent = ({ onMenuClose }:MainMenuContentPropsType) => {
                 </>)}
                 {projects && projects instanceof Array && projects.length > 0 && projects.map((project, index) => (
                     <ListItem key={`${project.id}-${index}`} disablePadding>
-                        <CostumListItemButton onClick={() => {closeMenu();console.log(project)}} onClickCapture={() => {navigate(`/project/${project.id}`)}} disableRipple>
+                        <CostumListItemButton onClick={() => {closeMenu()}} onClickCapture={() => {navigate(`/project/${project.id}`)}} disableRipple>
                             <CostumListItemIcon> <WorkIcon /> </CostumListItemIcon>
                             <CostumListItemText primary={project.title} />
                         </CostumListItemButton>

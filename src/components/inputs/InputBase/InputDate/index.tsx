@@ -45,9 +45,28 @@ interface InputDateType {
 
 const InputDate:React.FC<InputDateType> = ({ id, placeholder, value, setValue, error=false, disabled=false, minDate=undefined }) => {
 
+  const datevalue = React.useMemo(() => {
+
+    if (value) {
+      if (value instanceof DateObject) return value
+      else if (value !== "") {
+        
+        const [y, m, d] = value.split("-")
+
+        return new DateObject().set({
+          year: parseInt(y? y : "0"),
+          month: parseInt(m? m : "0"),
+          day: parseInt(d? d : "0"),
+        })  
+      }
+    }
+
+    return null
+  }, [value])
+
   return (
     <DateContainer>
-      <DatePicker id={`input-${id}`} value={value || null} disabled={disabled} readOnly={disabled} minDate={minDate} format="MM/DD/YYYY" placeholder={placeholder} onChange={(date:DateObject) => { 
+      <DatePicker id={`input-${id}`} value={datevalue} disabled={disabled} readOnly={disabled} minDate={minDate} format="MM/DD/YYYY" placeholder={placeholder} onChange={(date:DateObject) => { 
         setValue(id, date?.isValid ? date : null, { shouldValidate: true }); 
       }} />
     </DateContainer>

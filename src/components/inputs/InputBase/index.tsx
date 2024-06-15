@@ -87,7 +87,7 @@ const InputBase = ({ id, title, placeholder=null, type="text", values=[], disabl
     }, [isErr, disabled])
 
     React.useEffect(() => {
-        if ((type === "date" || type === "select") && defaultvalue) setFieldValue(defaultvalue)
+        if ((type === "date" || type === "select"  || type === "time") && defaultvalue) setFieldValue(defaultvalue)
     }, [setFieldValue, defaultvalue, type])
 
     React.useEffect(() => {

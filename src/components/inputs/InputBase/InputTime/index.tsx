@@ -1,7 +1,7 @@
+import React from 'react'
+
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
-
-import styles from './InputTime.module.css'
 
 import styled from 'styled-components';
 import { FieldValues, UseFormSetValue } from "react-hook-form";
@@ -42,9 +42,28 @@ interface InputTimeType {
 
 const InputTime:React.FC<InputTimeType> = ({ id, placeholder, value, setValue, disabled=false, error=false }) => {
 
+
+  const datevalue = React.useMemo(() => {
+
+    if (value) {
+      if (value instanceof DateObject) return value
+      else if (value !== "") {
+        
+        const [h, m] = value.split(":")
+
+        return new DateObject().set({
+          hour: parseInt(h? h : "0"),
+          minute: parseInt(m? m : "0"),
+        })  
+      }
+    }
+
+    return null
+  }, [value])
+
   return (
     <DateContainer>
-        <DatePicker id={`input-${id}`} value={value || ""} disabled={disabled} readOnly={disabled} disableDayPicker format="HH:mm" placeholder={placeholder} onChange={(date:DateObject) => { setValue(id, date?.isValid ? date : "", { shouldValidate: true }) }} plugins={[<TimePicker hideSeconds /> ]}  />
+        <DatePicker id={`input-${id}`} value={datevalue} disabled={disabled} readOnly={disabled} disableDayPicker format="HH:mm" placeholder={placeholder} onChange={(date:DateObject) => { setValue(id, date?.isValid ? date : "", { shouldValidate: true }) }} plugins={[<TimePicker hideSeconds /> ]}  />
     </DateContainer>
   )
 }

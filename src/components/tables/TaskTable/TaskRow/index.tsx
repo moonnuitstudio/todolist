@@ -24,6 +24,8 @@ import useResponsive from '../../../../hooks/useResponsive'
 
 import Tooltip from '@mui/material/Tooltip'
 
+import Swal from 'sweetalert2'
+
 import { TaskType } from '../../../../models/Task'
 import useModal from '../../../../hooks/useModal'
 
@@ -54,16 +56,17 @@ const MenuListItemText = styled(ListItemText)(() => ({
     color: 'black !important'
 }))
 
-type OnChangeStarType = (task:unknown) => void
+type OnChangeHandle = (task:unknown) => void
 
 interface TaskRowPropsType {
     labelId: string;
     row: TaskType;
-    onChangeStar?: null | OnChangeStarType;
+    onChangeStar?: null | OnChangeHandle;
+    onDeleteTask?: null | OnChangeHandle;
 }
 
 
-const TaskRow = ({ labelId, row, onChangeStar=null }:TaskRowPropsType) => {
+const TaskRow = ({ labelId, row, onChangeStar=null, onDeleteTask=null }:TaskRowPropsType) => {
     const { openModal: openTaskMenu } = useModal("taskmenu")
 
     const { isTabletOrDesktop, isDesktopVersion } = useResponsive()
@@ -94,13 +97,29 @@ const TaskRow = ({ labelId, row, onChangeStar=null }:TaskRowPropsType) => {
         setMousePosition(null)
     }
 
+    const handleDeleteTask = () => {
+        setMousePosition(null)
+
+        Swal.fire({
+            icon: "question",
+            title: "Do you want to delete this task?",
+            text: "Once the task is deleted, you won't be able to recover it",
+            showConfirmButton: false,
+            showDenyButton: true,
+            showCancelButton: true,
+            denyButtonText: `Delete Task`
+        }).then((result) => {
+            if (result.isDenied) onDeleteTask?.(row)
+        });
+    }
+
     return (
         <>
         <CustomRow
             hover
             tabIndex={-1}
             sx={{ cursor: 'pointer' }}
-            onDoubleClick={() => { editOptionHandle() }}
+            onDoubleClick={editOptionHandle}
             onContextMenu={(event) => {
                 event.preventDefault()
                 
@@ -122,11 +141,11 @@ const TaskRow = ({ labelId, row, onChangeStar=null }:TaskRowPropsType) => {
             { isDesktopVersion && (<CustomCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 130 }}>{row.status}</CustomCell>) }
             { isTabletOrDesktop && (<CustomCell align="left" style={{ width: 160 }}>
                 <Tooltip title={`${row.due_date} ${row.due_time}`} placement="left">
-                    {row.due_date}
+                    <span>{row.due_date}</span>
                 </Tooltip>
             </CustomCell>) }
             <CustomCell align="right" style={{ width: 20 }}>
-                <IconButton aria-label="edit" disableRipple onClick={() => { editOptionHandle() }}><ArrowForwardIosIcon sx={{ fontSize: '1rem' }} /></IconButton>
+                <IconButton aria-label="edit" disableRipple onClick={editOptionHandle}><ArrowForwardIosIcon sx={{ fontSize: '1rem' }} /></IconButton>
             </CustomCell>
         </CustomRow>
 
@@ -152,7 +171,7 @@ const TaskRow = ({ labelId, row, onChangeStar=null }:TaskRowPropsType) => {
                     <MenuListItemText>{ row.starred? "Remove as started" : "Mark as started" }</MenuListItemText>
                 </MenuItem>
                 <Divider/>
-                <MenuItem>
+                <MenuItem onClick={handleDeleteTask}>
                     <MenuListItemIcon>
                         <DeleteForeverIcon sx={{ fontSize: '1rem' }} />
                     </MenuListItemIcon>

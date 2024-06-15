@@ -104,7 +104,6 @@ const PageHeader = ({ project = null, useproject = false }: ProjectPagePropsType
 
                         switch(err_type) {
                             case ERR_TYPE_MESSAGE:
-                                console.log(data.msg)
                                 showErrorToast("There was an error!")
                                 break
                         }

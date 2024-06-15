@@ -53,30 +53,32 @@ const TaskTable = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { getAllTasks, forceReloadTask, updateStarOnTask, reload } = useTasks()
+    const { getAllTasks, forceReloadTask, updateStarOnTask, deleteTaskNoReload, reload } = useTasks()
     const { showSuccessToast, showErrorToast } = useToast()
+
+    const reloadTasksRows = () => {
+        forceReloadTask()
+        setLoadingTable(true)
+    }
 
     const handleRequestSort = ( event: React.MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
-        forceReloadTask()
-        setLoadingTable(true)
+        reloadTasksRows();
     }
 
     const emptyRows = React.useMemo<number>( () => (page > 0 )? rowsPerPage - rows.length : 0, [page, rowsPerPage, rows])
 
     const handleChangePage = (event: unknown, newPage: number) => { 
         setPage(newPage)
-        forceReloadTask()
-        setLoadingTable(true)
+        reloadTasksRows();
     }
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10))
         setPage(0)
-        forceReloadTask()
-        setLoadingTable(true)
+        reloadTasksRows();
     }
 
     const handleStartRow = (task) => {
@@ -85,6 +87,17 @@ const TaskTable = () => {
             else showErrorToast("ERR")
         })
         setRows(rows.map(row => (row.id == task.id)? task : row))
+    }
+
+    const handleDeleteTask = (task) => {
+        deleteTaskNoReload(task.id, (status) => {
+            if (status) {
+                showSuccessToast("Task Deleted")
+                // TODO: ADD REMOVE ELEMENT
+                reloadTasksRows()
+            }
+            else showErrorToast("ERR")
+        })
     }
 
     React.useEffect(() => {
@@ -134,9 +147,9 @@ const TaskTable = () => {
                         <EnhancedTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort}  />
                         <TableBody>
                             {(isLoading || loadingtable)? (<>
-                                {[...Array(rowsPerPage)].map(() => (<TableRow><TableCell colSpan={6} style={{ padding: '2px 0px' }}><Skeleton variant="rectangular" width="100%" height={28} /></TableCell></TableRow>))}
+                                {[...Array(rowsPerPage)].map((_, i) => (<TableRow key={`id-skeleton-${i}`}><TableCell colSpan={6} style={{ padding: '2px 0px' }}><Skeleton variant="rectangular" width="100%" height={28} /></TableCell></TableRow>))}
                             </>) : (<>
-                                {rows.map((row, index) => (<TaskRow key={row.id}  labelId={`table-task-row-${index}`} row={row} onChangeStar={handleStartRow} />))}
+                                {rows.map((row, index) => (<TaskRow key={row.id}  labelId={`table-task-row-${index}`} row={row} onChangeStar={handleStartRow} onDeleteTask={handleDeleteTask} />))}
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: (33) * emptyRows, }} >
                                         <TableCell colSpan={6} />

@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 import { TaskSchema } from "../../../../../schemas"
 
+import Swal from 'sweetalert2'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -21,10 +22,10 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 import StarBorderIcon from '@mui/icons-material/StarBorder'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import InputBase from "../../../../inputs/InputBase"
 
-import { TableTaskType } from "../../../../../models/Todo"
 import { prepareDate } from '../../../../../utils/datetools'
 
 import useProjects from "../../../../../hooks/useProjects"
@@ -40,9 +41,9 @@ const initValues:FormFields = {
     title: '',
     description: '',
     status: 'TODO',
-    project_id: '0',
-    duedate: undefined,
-    duetime: ''
+    project_id: 0,
+    due_date: undefined,
+    due_time: ''
 }
 
 const Form = styled('form')(() => ({
@@ -59,28 +60,43 @@ const CustomButton = styled(Button)(() => ({
     fontSize: '.9rem',
     fontWeight: '400',
     textTransform: 'capitalize',
-    paddingLeft: '10px',
-    paddingRight: '10px',
+    paddingLeft: '20px',
+    paddingRight: '20px',
+}))
+
+const DeleteBtn = styled(Button)(() => ({
+    fontFamily: '"Montserrat" !important',
+    fontSize: '.9rem',
+    fontWeight: '500',
+    color: '#BF0426',
+    border: '1px solid #BF0426',
+    padding: '10px 0px',
+    '&:hover': {
+        color: '#8C031C',
+        border: '1px solid #8C031C',
+    }
 }))
 
 interface TaskMenuFormProp {
     isEdit: boolean;
-    task: TableTaskType;
+    task: FormFields;
 }
 
 const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
 
     const { projects } = useProjects()
-    const { saveTask } = useTasks()
+    const { saveTask, deleteTask } = useTasks()
     const { showErrorToast, showSuccessToast } = useToast()
     const { closeModal: closeTaskModal } = useModal("taskmenu")
 
     const defaultValues = React.useMemo(() => {
         return isEdit? {
             title: task.title,
-            description: '',
-            due_date: null,
-            due_time: ''
+            description: task.description,
+            status: task.status,
+            project_id: (task.project instanceof Object)? task.project.id : 0,
+            due_date: task.due_date,
+            due_time: task.due_time
         } : initValues
     }, [isEdit, task])
 
@@ -100,7 +116,7 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
         defaultValues,
         resolver: yupResolver(TaskSchema), 
         mode: "onChange"
-    });
+    })
 
     const showErrFields = (data:unknown) => {
         const { err_type } = data
@@ -115,6 +131,27 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
                 
                 break;
         }
+    }
+
+    const handleDeleteTask = () => {
+        Swal.fire({
+            icon: "question",
+            title: "Do you want to delete this task?",
+            text: "Once the task is deleted, you won't be able to recover it",
+            showConfirmButton: false,
+            showDenyButton: true,
+            showCancelButton: true,
+            denyButtonText: `Delete Task`
+        }).then((result) => {
+            if (result.isDenied) deleteTask(task.id, (status) => {
+                if (status) {
+                    showSuccessToast("Task Deleted")
+                    closeTaskModal()
+                } else {
+                    showErrorToast("ERR")
+                }
+            })
+        });
     }
 
     const onSubmit = (data:FormFields) => {
@@ -136,10 +173,10 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
                 <Box sx={{ flexGrow: 1 }}>
                     <InputBase id="title" title="Task*" placeholder="Buy groceries" endIcon={<StarBorderIcon />} onEndIconClick={() => { alert('TEST') }} />
-                    <InputBase id="project_id" title="Project" placeholder="Default" type="select" values={selectProjectsValue} defaultvalue={0} />
+                    <InputBase id="project_id" title="Project" placeholder="Default" type="select" values={selectProjectsValue} defaultvalue={defaultValues.project_id} />
                     <Grid container>
                         <Grid item  xs={12} sm={4}>
-                            <InputBase id="status" title='Status' type="select" values={[ { id: 'TODO', name: 'To Do' }, {id: 'DOING', name: 'Doing'}, {id: 'DONE', name: 'Done'} ]} defaultvalue="TODO" />
+                            <InputBase id="status" title='Status' type="select" values={[ { id: 'TODO', name: 'To Do' }, {id: 'DOING', name: 'Doing'}, {id: 'DONE', name: 'Done'} ]} defaultvalue={defaultValues.status} />
                         </Grid>
                     </Grid>
                     <InputBase id="description" title="Task Description" placeholder="Get fresh fruits (apples, bananas, oranges)" type="textarea" />
@@ -155,16 +192,25 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
                         <AccordionDetails>
                             <Grid container>
                                 <Grid item xs={8} pr={2}>
-                                    <InputBase id="due_date" title='Date' placeholder="Start date" type="date" defaultvalue={initValues.duedate} minDate={new Date()} />
+                                    <InputBase id="due_date" title='Date' placeholder="Start date" type="date" defaultvalue={defaultValues.due_date} minDate={new Date()} />
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <InputBase id="due_time" title='Time' placeholder="HH:MM" type="time" />
+                                    <InputBase id="due_time" title='Time' placeholder="HH:MM" type="time" defaultvalue={defaultValues.due_time} />
                                 </Grid>
                             </Grid>
                         </AccordionDetails>
                     </Accordion>
                 </Box>
-                <Box mt={2} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', borderTop: '1px solid rgba(0, 0, 0, .3)', paddingTop: '10px' }}>
+                <Box mt={2} sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'row', 
+                    justifyContent: isEdit? "space-between" : 'flex-end', 
+                    alignItems: 'center', 
+                    borderTop: '1px solid rgba(0, 0, 0, .3)', 
+                    paddingTop: '10px' 
+                }}>
+                    {isEdit && (<DeleteBtn variant="outlined" onClick={handleDeleteTask}><DeleteIcon /></DeleteBtn>)}    
+                    
                     <ButtonGroup variant="text" aria-label="Basic button group">
                         <CustomButton onClick={() => { methods.reset() }} disableFocusRipple disableRipple>Reset Form</CustomButton>
                         <CustomButton type="submit" sx={{ textTransform: 'uppercase', fontWeight: '500' }}>{isEdit? 'Update' : 'Register'}</CustomButton>

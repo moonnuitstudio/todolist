@@ -50,6 +50,23 @@ const useTasks = () => {
         })
     }
 
+    const deleteTask = (id:number, result:null | ResultHandleType=null) => {
+        AxiosClient.delete(`/tasks/${id}`, generateConfig(authToken)).then(() => {
+            dispatch(actionReloadTask())
+            result?.(true, null)
+        }).catch(({ response: { data } }) => {
+            result?.(false, data)
+        })
+    }
+
+    const deleteTaskNoReload = (id:number, result:null | ResultHandleType=null) => {
+        AxiosClient.delete(`/tasks/${id}`, generateConfig(authToken)).then(() => {
+            result?.(true, null)
+        }).catch(({ response: { data } }) => {
+            result?.(false, data)
+        })
+    }
+
     const forceReloadTask = () => { dispatch(actionReloadTask()) }
 
     return {
@@ -57,7 +74,9 @@ const useTasks = () => {
         saveTask,
         getAllTasks,
         forceReloadTask,
-        updateStarOnTask
+        updateStarOnTask,
+        deleteTask,
+        deleteTaskNoReload
     }
 }
 

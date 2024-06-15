@@ -235,15 +235,15 @@ const theme = createTheme({
             styleOverrides: {
                 contained: {
                     fontFamily: "'League_Spartan'",
-                    fontWeight: '800',
+                    fontWeight: '700',
                     lineHeight: '1rem',
                     padding: '17px 50px 14px',
-                    background: palette.secondary.light,
-                    color: 'black',
-                    transition: 'background .2s ease-in-out, color .2s ease-in-out',
-                    '&:hover': {
-                        background: '#F28F29',
-                    }
+                    // background: palette.secondary.light,
+                    // color: 'black',
+                    // transition: 'background .2s ease-in-out, color .2s ease-in-out',
+                    // '&:hover': {
+                    //     background: '#F28F29',
+                    // }
                 },
                 text: {
                     background: 'transparent !important',
