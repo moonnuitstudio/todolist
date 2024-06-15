@@ -4,43 +4,62 @@ import { styled } from '@mui/system'
 
 import Box from '@mui/material/Box'
 
-import styles from "./InputSelect.module.css";
+import FormControl from '@mui/material/FormControl'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 
-import { FieldValues, UseFormRegister } from "react-hook-form";
+import { useTheme } from "@mui/material"
+
+import { prepareDateForSever } from '../../../../utils/datetools'
+
+import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form"
 
 interface KeyValue {
-    id: string;
+    id: number | string;
     name: string;
 }
 
 interface InputSelectPropsTypes {
     id: string;
-    register: UseFormRegister<FieldValues>;
+    value: string;
+    setValue: UseFormSetValue<FieldValues>;
     err?: boolean;
     disabled?: boolean;
     values?: KeyValue[];
 }
 
-const SelectBox = styled(Box, {
-    shouldForwardProp: (props) => props !== "selectColor"
-})(({ selectColor }) => ({
+const SelectBox = styled(Box)(() => ({
     position: 'relative',
     width: '100%', 
     padding: '0px !important',
-    '&::after': {
-        content: '"▼"',
-        display: 'block',
-        fontSize: '1rem',
-        color: selectColor,
-        position: 'absolute',
-        zIndex: '-99',
-        top: '50%',
-        right: '15px',
-        transform: 'translate(0, -50%)',
+}))
+
+const SelectElement = styled(Select)(() => ({
+    fontFamily: '"Montserrat" !important',
+    fontsize: '.9rem',
+    fontweight: '400',
+    flexgrow: '1',
+    padding: '0px',
+    background: 'transparent',
+    border: 'none !important',
+    outline: 'none !important',
+    appearance: 'none',
+    position: 'relative',
+    '& .MuiSelect-select': {
+        padding: '9px 5px 10px 10px',
+        border: 'none !important',
+        outline: 'none !important',
+    },
+    '& fieldset': {
+        padding: '0px',
+        border: 'none !important',
+        outline: 'none !important',
     }
 }))
 
-const InputSelect = ({ id, register, err=false, disabled=false, values=[] }:InputSelectPropsTypes) => {
+const InputSelect = ({ id, value, setValue, err=false, disabled=false, values=[] }:InputSelectPropsTypes) => {
+
+    const theme = useTheme()
 
     const selectColor = React.useMemo(() => {
         if (disabled) return 'rgba(0,0,0,.3)'
@@ -49,15 +68,42 @@ const InputSelect = ({ id, register, err=false, disabled=false, values=[] }:Inpu
         return '#206C65'
     }, [disabled, err])
 
+    const handleChange = (event: SelectChangeEvent) => {
+        setValue(id, event.target.value, { shouldValidate: true }); 
+    };
+
     return (
         <SelectBox selectColor={selectColor}>
-            <select id={`input-${id}`} disabled={disabled} className={styles.selectBase} style={{width: '100%'}} {...register(id)}>
-                {
-                    values?.map((value, index) => (
-                        <option key={`select_${index}_${value.id}_${value.name}`} value={value.id} style={{ margin: '10px 5px' }}>{value.name}</option>
-                    ))
-                }
-            </select>
+            <FormControl sx={{ width: '100%', padding: '0px', margin: '0px' }}>
+                <SelectElement 
+                    id={`input-${id}`} 
+                    sx={{ width: '100%' }}
+                    value={value}
+                    onChange={handleChange} 
+                    MenuProps={{ 
+                        sx: { 
+                            '& ul': {
+                                background: 'white',
+                                '& li': {
+                                    fontFamily: '"Montserrat" !important',
+                                    fontsize: '.9rem',
+                                    fontweight: '400',
+                                }
+                            }
+                        }
+                    }} 
+                    displayEmpty
+                >
+                    {
+                        values?.map((value, index) => (
+                            <MenuItem key={`select_${index}_${value.id}_${value.name}`} value={value.id}>{value.name}</MenuItem>
+                        ))
+                    }
+                </SelectElement>
+            </FormControl>
+            {/* <select id={`input-${id}`} disabled={disabled} className={styles.selectBase} style={{width: '100%'}} {...register(id)}>
+                
+            </select> */}
         </SelectBox>
     )
 }

@@ -36,13 +36,9 @@ export default function(state = initialStates, action) {
             }
 
         case REDU_DELETE_PROJECTS:
-            const index = state.projects.findIndex(project => project.id === action.payload);
-
-            if (index < 0) return state
-
             return {
                 ...state,
-                projects: state.projects.splice(index, 0)
+                projects: state.projects.filter(project => project.id != action.payload)
             }
 
         default:

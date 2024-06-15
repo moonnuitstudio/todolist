@@ -2,7 +2,7 @@ import { styled } from '@mui/system'
 
 import Typography from "@mui/material/Typography"
 
-import { getTodayFormat } from '../../utils/datetools.js'
+import { getTodayFormat } from '../../utils/datetools'
 
 const HeaderPage = styled('header')(() => ({
     width: '100%',

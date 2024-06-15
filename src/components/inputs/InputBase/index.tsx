@@ -17,7 +17,7 @@ import InputTime from "./InputTime"
 type EndIconHanldeType = () => void
 
 interface KeyValue {
-    id: string;
+    id: number | string;
     name: string;
 }
 
@@ -29,7 +29,7 @@ interface InputBasePropsType {
     type?: string;
     disabled?: boolean;
     endIcon?: null | React.ReactNode;
-    defaultvalue?: string;
+    defaultvalue?: number | string;
     minDate?: undefined | Date;
     onEndIconClick?: null | EndIconHanldeType;
 }
@@ -64,7 +64,7 @@ const InputBase = ({ id, title, placeholder=null, type="text", values=[], disabl
 
     const { register, setValue, watch, formState: { errors }, trigger } = useFormContext() 
 
-    const [fieldValue, setFieldValue] = React.useState<string>("")
+    const [fieldValue, setFieldValue] = React.useState<number | string>(defaultvalue)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const isErr = React.useMemo(() => !!errors[id], [ errors, errors[id], id ])
@@ -87,13 +87,14 @@ const InputBase = ({ id, title, placeholder=null, type="text", values=[], disabl
     }, [isErr, disabled])
 
     React.useEffect(() => {
-        if (type === "date" && defaultvalue) setFieldValue(defaultvalue)
+        if ((type === "date" || type === "select") && defaultvalue) setFieldValue(defaultvalue)
     }, [setFieldValue, defaultvalue, type])
 
     React.useEffect(() => {
         const subscription = watch((value) => {
             if (value) {
-                setFieldValue(value[id])
+                if (typeof value[id] === 'number') setFieldValue(parseInt(value[id]))
+                else setFieldValue(value[id])
             }      
         })
         return () => subscription.unsubscribe()
@@ -104,7 +105,7 @@ const InputBase = ({ id, title, placeholder=null, type="text", values=[], disabl
             setFieldValue("")
             
             if (type == "date") setValue(id, null, { shouldValidate: false })
-            else setValue(id, "", { shouldValidate: false })
+            else if(type !== "select") setValue(id, "", { shouldValidate: false })
 
             trigger(id)
         }
@@ -120,7 +121,7 @@ const InputBase = ({ id, title, placeholder=null, type="text", values=[], disabl
             case "textarea":
                 return (<textarea id={`input-${id}`} placeholder={placeholder || ""} rows={4} cols={50} disabled={disabled} style={{width: '100%'}} className={inputClassNames} {...register(id)} />)
             case "select": 
-                return (<InputSelect disabled={disabled} id={id} values={values} register={register} err={isErr} />)
+                return (<InputSelect disabled={disabled} id={id} values={values} setValue={setValue} value={fieldValue} err={isErr} />)
             default:
                 return (<input id={`input-${id}`} className={inputClassNames} type={type} placeholder={placeholder || ""} {...register(id)} />)
         }

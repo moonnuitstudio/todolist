@@ -1,3 +1,8 @@
+import * as yup from "yup"
+import { TaskSchema } from "../schemas";
+
+export type TaskSchemaType = yup.InferType<typeof TaskSchema>
+
 export interface TaskType {
     id: number;
     title: string;

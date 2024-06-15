@@ -8,7 +8,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 import { TaskSchema } from "../../../../../schemas"
 
-import TextFieldBase from "../../../../inputs/TextFieldBase"
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
@@ -17,28 +16,26 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import Button from "@mui/material/Button"
 
 import Accordion from '@mui/material/Accordion'
-import AccordionActions from '@mui/material/AccordionActions'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
-import IconButton from '@mui/material/IconButton'
-import StarIcon from '@mui/icons-material/Star'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 import InputBase from "../../../../inputs/InputBase"
 
-import EventFormTitle from "../../../../forms/decorations/EventFormTitle"
-
 import { TableTaskType } from "../../../../../models/Todo"
 
 import useProjects from "../../../../../hooks/useProjects"
+import useTasks from "../../../../../hooks/useTasks"
 
 type FormFields = yup.InferType<typeof TaskSchema>
 
 const initValues:FormFields = { 
     title: '',
     description: '',
+    status: 'TODO',
+    project_id: '0',
     duedate: undefined,
     duetime: ''
 }
@@ -69,6 +66,7 @@ interface TaskMenuFormProp {
 const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
 
     const { projects } = useProjects()
+    const { saveTask } = useTasks()
 
     const defaultValues = React.useMemo(() => {
         return isEdit? {
@@ -80,10 +78,15 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
     }, [isEdit, task])
 
     const selectProjectsValue = React.useMemo(() => {
-        return projects.map(( project ) => ({
+        const _projects =  projects.map(( project ) => ({
             id: project.id,
             name: project.title,
         }))
+
+        return [{
+            id: 0,
+            name: 'None',
+        }, ..._projects]
     }, [projects])
 
     const methods = useForm<FormFields>({
@@ -93,7 +96,13 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
     });
 
     const onSubmit = (data:FormFields) => {
-
+        saveTask(data, (status, _data) => {
+            if (status) {
+                console.log('ok:', _data)
+            } else {
+                console.log('err:', _data)
+            }
+        })
     }
 
     return (
@@ -101,10 +110,10 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
                 <Box sx={{ flexGrow: 1 }}>
                     <InputBase id="title" title="Task*" placeholder="Buy groceries" endIcon={<StarBorderIcon />} onEndIconClick={() => { alert('TEST') }} />
-                    <InputBase id="project" title="Project" placeholder="Default" type="select" values={selectProjectsValue} />
+                    <InputBase id="project_id" title="Project" placeholder="Default" type="select" values={selectProjectsValue} defaultvalue={0} />
                     <Grid container>
-                        <Grid item  xs={12} sm={6}>
-                            <InputBase id="status" title='Status' type="select" values={[ { id: '2', name: 'To Do' }, {id: '1', name: 'Done'} ]} />
+                        <Grid item  xs={12} sm={4}>
+                            <InputBase id="status" title='Status' type="select" values={[ { id: 'TODO', name: 'To Do' }, {id: 'DOING', name: 'Doing'}, {id: 'DONE', name: 'Done'} ]} defaultvalue="TODO" />
                         </Grid>
                     </Grid>
                     <InputBase id="description" title="Task Description" placeholder="Get fresh fruits (apples, bananas, oranges)" type="textarea" />

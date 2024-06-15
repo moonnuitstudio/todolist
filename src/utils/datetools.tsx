@@ -24,3 +24,25 @@ export const prepareDateForSever = (_date) => {
 
     return `${ date.getFullYear() }-${ month }-${ day }`
 }
+
+/**
+ * function prepareDateEventInfo(date:Date | null, time:string | undefined) {
+    let info = ""
+
+    if (date && !isNaN(date)) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        info = `${year}-${month}-${day}`
+    }
+
+    if (time && time != "") {
+        const [hour, min] = time.split(':')
+
+        info += ` ${hour}:${min}`
+    }
+
+    return info
+}
+ */

@@ -13,10 +13,10 @@ const DateContainer = styled.div`
     width: 100%;
     &>input {
       font-family: "Montserrat" !important;
-      font-size: .9rem;
+      font-size: 1rem;
       font-weight: 400;
       width: 100%;
-      padding: 8px 5px 8px 10px;
+      padding: 11px 5px 11px 10px;
       background: transparent;
       border: none !important;
       outline: none !important;
