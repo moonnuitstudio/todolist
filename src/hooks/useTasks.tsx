@@ -32,6 +32,15 @@ const useTasks = () => {
         })
     }
 
+    const updateTask = (project:TaskSchemaType, result:null | ResultHandleType=null) => {
+        AxiosClient.put(`/tasks/${project.id}`, project, generateConfig(authToken)).then(() => {
+            dispatch(actionReloadTask())
+            result?.(true, null)
+        }).catch(({ response: { data } }) => {
+            result?.(false, data)
+        })
+    }
+
     const updateStarOnTask = (id:number, star:boolean, result:null | ResultHandleType=null) => {
         AxiosClient.put(`/tasks/${id}/star`, { starred: star }, generateConfig(authToken)).then(() => {
             result?.(true, null)
@@ -42,6 +51,16 @@ const useTasks = () => {
 
     const getAllTasks = (token: null | string = null, query: QueryTaskType, result:null | ResultHandleType=null) => {
         AxiosClient.get(`/tasks?limit=${query.limit}&page=${query.page}&orderby=${query.orderBy}&order=${query.order}`, generateConfig(token? token : authToken)).then(({ data }) => {
+            dispatch(actionStopReloadTask())
+            result?.(true, data)
+        }).catch(({ response: { data } }) => {
+            dispatch(actionStopReloadTask())
+            result?.(false, data)
+        })
+    }
+
+    const getAllTasksByProjectID = (token: null | string = null, projectid:number, query: QueryTaskType, result:null | ResultHandleType=null) => {
+        AxiosClient.get(`projects/${projectid}/tasks?limit=${query.limit}&page=${query.page}&orderby=${query.orderBy}&order=${query.order}`, generateConfig(token? token : authToken)).then(({ data }) => {
             dispatch(actionStopReloadTask())
             result?.(true, data)
         }).catch(({ response: { data } }) => {
@@ -72,11 +91,13 @@ const useTasks = () => {
     return {
         reload,
         saveTask,
+        updateTask,
         getAllTasks,
         forceReloadTask,
         updateStarOnTask,
         deleteTask,
-        deleteTaskNoReload
+        deleteTaskNoReload,
+        getAllTasksByProjectID
     }
 }
 

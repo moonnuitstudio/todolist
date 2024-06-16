@@ -6,6 +6,8 @@ import Box from '@mui/material/Box'
 
 import PageHeader from '../../components/PageHeader'
 
+import TaskTable from '../../components/tables/TaskTable'
+
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 
@@ -48,6 +50,7 @@ const ProjectPage = () => {
   return (
     <CustomContainer>
       <PageHeader useproject project={project} />
+      <TaskTable useproject project={project} />
     </CustomContainer>
   )
 }

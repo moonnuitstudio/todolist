@@ -60,7 +60,7 @@ const InputDate:React.FC<InputDateType> = ({ id, placeholder, value, setValue, e
         })  
       }
     }
-
+    
     return null
   }, [value])
 

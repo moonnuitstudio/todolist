@@ -23,7 +23,7 @@ import Skeleton from '@mui/material/Skeleton'
 import EnhancedTableHead from './EnhancedTableHead'
 import TaskRow from './TaskRow'
 
-import { TaskType, createTableTask } from '../../../models/Task'
+import { ProjectType } from '../../../models/Project'
 
 import useResponsive from '../../../hooks/useResponsive'
 import useModal from '../../../hooks/useModal'
@@ -37,7 +37,12 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 type Order = 'asc' | 'desc';
 
-const TaskTable = () => {
+interface TaskTablePropsType {
+    project?: null | ProjectType;
+    useproject?: boolean;
+}
+
+const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => {
     const [loadingtable, setLoadingTable] = React.useState(true)
     const [rows, setRows] = React.useState([])
     const [totalrows, setTotalRows] = React.useState(0)
@@ -53,7 +58,7 @@ const TaskTable = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { getAllTasks, forceReloadTask, updateStarOnTask, deleteTaskNoReload, reload } = useTasks()
+    const { getAllTasks, forceReloadTask, updateStarOnTask, deleteTaskNoReload, getAllTasksByProjectID, reload } = useTasks()
     const { showSuccessToast, showErrorToast } = useToast()
 
     const reloadTasksRows = () => {
@@ -105,6 +110,13 @@ const TaskTable = () => {
     }, [])
 
     React.useEffect(() => {
+        if (useproject && project) {
+            reloadTasksRows()
+        }
+
+    }, [project, useproject])
+
+    React.useEffect(() => {
         if (isMobile) {
             setRowsPerPage(100)
             setPage(0)
@@ -118,16 +130,24 @@ const TaskTable = () => {
 
         const limit = rowsPerPage
 
-        getAllTasks(token, { limit, page, orderBy, order}, (status, data) => {
+        const handleStatus = (status:boolean, data:unknown) => {
 
             if (status) {
                 setTotalRows(data.total)
                 setRows(data.tasks)
+
+                if (data.tasks.length == 0 && page > 0) {
+                    setPage(0)
+                }
             }
 
             setLoadingTable(false)
-        })
-    }, [isLoading, isAuthenticated, getAllTasks, token, reload, rowsPerPage, page, orderBy, order])
+        }
+
+        if (useproject && project) getAllTasksByProjectID(token, project.id, { limit, page, orderBy, order}, handleStatus)
+        else getAllTasks(token, { limit, page, orderBy, order}, handleStatus)
+
+    }, [setPage, isLoading, isAuthenticated, getAllTasks, token, reload, rowsPerPage, page, orderBy, order, getAllTasksByProjectID, useproject, project])
 
     return (
         <Box sx={{ paddingTop: '10px', paddingBottom: '10px' }}>

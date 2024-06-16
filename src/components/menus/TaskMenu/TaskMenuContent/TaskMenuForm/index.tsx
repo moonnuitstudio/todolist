@@ -85,7 +85,7 @@ interface TaskMenuFormProp {
 const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
 
     const { projects } = useProjects()
-    const { saveTask, deleteTask } = useTasks()
+    const { saveTask, deleteTask, updateTask } = useTasks()
     const { showErrorToast, showSuccessToast } = useToast()
     const { closeModal: closeTaskModal } = useModal("taskmenu")
 
@@ -95,7 +95,7 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
             description: task.description,
             status: task.status,
             project_id: (task.project instanceof Object)? task.project.id : 0,
-            due_date: task.due_date,
+            due_date: task.due_date? task.due_date : undefined,
             due_time: task.due_time
         } : initValues
     }, [isEdit, task])
@@ -155,17 +155,31 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
     }
 
     const onSubmit = (data:FormFields) => {
-        data.due_date = new Date(prepareDate(data.due_date))
-
-        saveTask(data, (status, _data) => {
-            if (status) {
-                showSuccessToast("New task has been successfully registered.")
-                closeTaskModal()
-            } else {
-                showErrFields(_data)
-                showErrorToast("The task could not be registered.")
-            }
-        })
+        data.due_date = prepareDate(data.due_date)
+        
+        if (isEdit) {
+            data.id = task.id
+            //alert("DATE: "+data.due_date)
+            updateTask(data, (status, _data) => {
+                if (status) {
+                    showSuccessToast("The Task has been successfully updated.")
+                    closeTaskModal()
+                } else {
+                    showErrFields(_data)
+                    showErrorToast("The task could not be updated.")
+                }
+            })
+        } else {
+            saveTask(data, (status, _data) => {
+                if (status) {
+                    showSuccessToast("New task has been successfully registered.")
+                    closeTaskModal()
+                } else {
+                    showErrFields(_data)
+                    showErrorToast("The task could not be registered.")
+                }
+            })
+        }
     }
 
     return (
