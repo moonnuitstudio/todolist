@@ -117,15 +117,6 @@ const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => 
     }, [project, useproject])
 
     React.useEffect(() => {
-        if (isMobile) {
-            setRowsPerPage(100)
-            setPage(0)
-            forceReloadTask()
-            setLoadingTable(true)
-        }
-    }, [isMobile, setRowsPerPage, setPage, forceReloadTask])
-
-    React.useEffect(() => {
         if (isLoading || !isAuthenticated || !token || !reload) return
 
         const limit = rowsPerPage
