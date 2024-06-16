@@ -142,8 +142,8 @@ const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => 
 
     return (
         <Box sx={{ paddingTop: '10px', paddingBottom: '10px' }}>
-            <Stack sx={{ width: '100%', paddingBottom: '10px', paddingTop: '5px', gap: '10px' }} flexDirection="row">
-                {isTabletOrDesktop && (<Button sx={{ textTransform: 'capitalize !important' }} variant='outlined' startIcon={<AddCircleIcon />} onClick={() => { openModal() }}>Add Task</Button>)}
+            <Stack sx={{ width: '100%', paddingBottom: '10px', paddingTop: '5px', gap: '10px' }} flexDirection="row" justifyContent={isMobile? 'space-between' : 'flex-start'}>
+                <Button sx={{ textTransform: 'capitalize !important' }} variant='outlined' startIcon={<AddCircleIcon />} onClick={() => { openModal() }}>Add Task</Button>
                 <ButtonGroup variant="text" >
                     <Button sx={{ padding: '5px 20px !important', minWidth: '60px !important' }} startIcon={<FilterListIcon />}>Filter</Button>
                 </ButtonGroup>

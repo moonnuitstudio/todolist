@@ -87,7 +87,7 @@ const NewDashboardLayout = () => {
             <BoxContentContainer headerheight={headerHeight}>
                 <MainMenu menuWidth={250} tabletMenuWidth={350} open={menuOpen} onMenuClose={() => setMenuOpen(false)} />
                 <Outlet />
-                {isMobile && (<MobilSubMenu />)}
+                {/* {isMobile && (<MobilSubMenu />)} */}
             </BoxContentContainer>
         </DashboardContainer>
     )
