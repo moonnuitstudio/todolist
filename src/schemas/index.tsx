@@ -11,6 +11,7 @@ export const TaskSchema = yup.object({
         return schema
     }),
     due_time: yup.string(),
+    starred: yup.bool(),
 })
 
 export const ProjectSchema = yup.object({

@@ -21,6 +21,7 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
+import StarIcon from '@mui/icons-material/Star'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
 import DeleteIcon from '@mui/icons-material/Delete'
 
@@ -43,7 +44,8 @@ const initValues:FormFields = {
     status: 'TODO',
     project_id: 0,
     due_date: undefined,
-    due_time: ''
+    due_time: '',
+    starred: false
 }
 
 const Form = styled('form')(() => ({
@@ -89,6 +91,8 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
     const { showErrorToast, showSuccessToast } = useToast()
     const { closeModal: closeTaskModal } = useModal("taskmenu")
 
+    const [ starred, setStarred ] = React.useState(false)
+
     const defaultValues = React.useMemo(() => {
         return isEdit? {
             title: task.title,
@@ -96,7 +100,8 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
             status: task.status,
             project_id: (task.project instanceof Object)? task.project.id : 0,
             due_date: task.due_date? task.due_date : undefined,
-            due_time: task.due_time
+            due_time: task.due_time,
+            starred: task.starred
         } : initValues
     }, [isEdit, task])
 
@@ -156,7 +161,8 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
 
     const onSubmit = (data:FormFields) => {
         data.due_date = prepareDate(data.due_date)
-        
+        data.starred = starred
+
         if (isEdit) {
             data.id = task.id
             //alert("DATE: "+data.due_date)
@@ -182,11 +188,17 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
         }
     }
 
+    React.useEffect(() => {
+        if (isEdit && task) {
+            setStarred(task.starred? true : false)
+        }
+    }, [isEdit, task])
+
     return (
         <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
                 <Box sx={{ flexGrow: 1 }}>
-                    <InputBase id="title" title="Task*" placeholder="Buy groceries" endIcon={<StarBorderIcon />} onEndIconClick={() => { alert('TEST') }} />
+                    <InputBase id="title" title="Task*" placeholder="Buy groceries" endIcon={starred? (<StarIcon />) : (<StarBorderIcon />) } onEndIconClick={() => { setStarred(!starred) }} />
                     <InputBase id="project_id" title="Project" placeholder="Default" type="select" values={selectProjectsValue} defaultvalue={defaultValues.project_id} />
                     <Grid container>
                         <Grid item  xs={12} sm={4}>
@@ -226,7 +238,11 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
                     {isEdit && (<DeleteBtn variant="outlined" onClick={handleDeleteTask}><DeleteIcon /></DeleteBtn>)}    
                     
                     <ButtonGroup variant="text" aria-label="Basic button group">
-                        <CustomButton onClick={() => { methods.reset() }} disableFocusRipple disableRipple>Reset Form</CustomButton>
+                        <CustomButton onClick={() => { 
+                            if (isEdit && task) setStarred(task.starred? true : false); else setStarred(false);
+
+                            methods.reset(); 
+                        }} disableFocusRipple disableRipple>Reset Form</CustomButton>
                         <CustomButton type="submit" sx={{ textTransform: 'uppercase', fontWeight: '500' }}>{isEdit? 'Update' : 'Register'}</CustomButton>
                     </ButtonGroup>
                 </Box>
