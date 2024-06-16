@@ -15,7 +15,7 @@ const MenuContainer = styled(Box)(({ theme }) => ({
   left: 0,
   width: '100%',
   height: '50px',
-  background: `#B33F00 !important`,//background: theme.palette.background.default,
+  border: '1px solid rgba(0, 0, 0, .7)',
   //boxShadow: '0px 0px 20px -10px rgba(0,0,0,0.75)'
   borderTopRightRadius: '10px',
   borderTopLeftRadius: '10px',
@@ -26,8 +26,10 @@ const AddTaskBtn = styled(Fab)(() => ({
   bottom: '15px',
   left: '50%',
   transform: 'translate(-50%, 0)',
-  background: `#B33F00 !important`,
-  color: 'white',
+  border: '1px solid rgba(0, 0, 0, .7)',
+  background: 'transparent !important',
+  color: 'black !important',
+  boxShadow: 'none !important',
   '& svg': {
     fontSize: '1.8rem',
   }
