@@ -53,7 +53,7 @@ interface MainMenuPropsType {
 const MainMenu = ({ menuWidth, tabletMenuWidth, open, onMenuClose }: MainMenuPropsType) => {
 
     const { isDesktopVersion, isMobile, isTabletOrMobile } = useResponsive()
-    const { user, isAuthenticated, isLoading } = useAuth0()
+    const { user, isAuthenticated, isLoading, logout } = useAuth0()
 
     const theme = useTheme();
 
@@ -114,7 +114,7 @@ const MainMenu = ({ menuWidth, tabletMenuWidth, open, onMenuClose }: MainMenuPro
 
                 <MainMenuContent onMenuClose={onMenuClose} />
 
-                {isTabletOrMobile && (<Button sx={{ width: '100%' }} variant="outlined" onClick={() => { onMenuClose(); }}>Log Out</Button>)}
+                {isTabletOrMobile && (<Button sx={{ width: '100%' }} variant="outlined" onClick={() => { onMenuClose(); logout(); }}>Log Out</Button>)}
             </MainMenuContainerContent>
         </Drawer>
     )
