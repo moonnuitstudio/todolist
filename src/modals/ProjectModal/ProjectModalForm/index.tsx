@@ -1,4 +1,3 @@
-import * as yup from "yup";
 import React from 'react'
 import { styled } from '@mui/system'
 
@@ -42,7 +41,7 @@ const CustomButton = styled(Button)(() => ({
 
 interface ProjectModalFormProp {
     isEdit: boolean;
-    project: ProjectSchemaType | ProjectType;
+    project: ProjectSchemaType | ProjectType | null;
     handleCloseModal: CloseModalHandleType;
 }
 
@@ -52,7 +51,12 @@ const ProjectModalForm = ({ isEdit, project, handleCloseModal }:ProjectModalForm
     const { showSuccessToast, showErrorToast } = useToast()
 
     const defaultValues = React.useMemo(() => {
-        return isEdit? project : initValues
+        if (isEdit && project) {
+            return {
+                title: project.title
+            }
+        } else
+            return initValues
     }, [isEdit, project])
 
     const methods = useForm<ProjectSchemaType>({
@@ -61,15 +65,23 @@ const ProjectModalForm = ({ isEdit, project, handleCloseModal }:ProjectModalForm
         mode: "onChange"
     });
 
-    const showErrFields = (data:unknown) => {
-        const { err_type } = data
+    interface IDataErr {
+        err_type: string;
+        fields: Map<string, string>;
+    }
 
+    const showErrFields = (data:IDataErr) => {
+        const { err_type, fields } = data
+        
         switch(err_type) {
             case ERR_TYPE_BY_MULTIPLE_FIELDS:
-                const { fields } = data
-
-                for (var field in fields) {
-                    methods.setError(field.toLowerCase(), { type: 'custom', message: fields[field] })
+                for (const field in fields) {
+                    if (field in ProjectSchema)
+                        switch (field) {
+                            case "title":
+                                methods.setError("title", { type: 'custom', message: fields.get(field) })
+                                break;
+                        }
                 }
                 
                 break;
@@ -82,7 +94,7 @@ const ProjectModalForm = ({ isEdit, project, handleCloseModal }:ProjectModalForm
                 showSuccessToast("The new project has been successfully registered.")
                 handleCloseModal()
             } else {
-                showErrFields(data)
+                showErrFields((data as IDataErr))
                 showErrorToast("The project could not be registered.")
             }
         })
@@ -94,7 +106,7 @@ const ProjectModalForm = ({ isEdit, project, handleCloseModal }:ProjectModalForm
                 showSuccessToast("Project has been successfully updated.")
                 handleCloseModal()
             } else {
-                showErrFields(data)
+                showErrFields((data as IDataErr))
                 showErrorToast("The project could not be updated.")
             }
         })
@@ -102,7 +114,8 @@ const ProjectModalForm = ({ isEdit, project, handleCloseModal }:ProjectModalForm
 
     const onSubmit = (data:ProjectSchemaType) => {
         if (isEdit) {
-            putUpdateProject(project.id, data)
+            if (project)
+                putUpdateProject((project as ProjectType).id, data)
         } else {
             postSaveProject(data)
         }     

@@ -97,9 +97,9 @@ const MenuList = () => {
                             <ListItemIcon>
                                 <WorkIcon />
                             </ListItemIcon>
-                            <ListItemText primary={project.Title} />
+                            <ListItemText primary={project.title} />
                         </ListItemButton>
-                        <IconButton aria-label="plus" sx={{ marginRight: '30px' }} onClick={() => { openProjectModal({ title: project.title }) }}>
+                        <IconButton aria-label="plus" sx={{ marginRight: '30px' }} onClick={() => { openProjectModal(project) }}>
                             <EditIcon />
                         </IconButton>
                     </ListItem>

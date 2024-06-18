@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 
 import useProjects from '../../hooks/useProjects'
+import { ProjectType } from '../../models/Project'
 
 const CustomContainer = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -28,7 +29,7 @@ const CustomContainer = styled(Box)(({ theme }) => ({
 
 const ProjectPage = () => {
   
-  const [project, setProject] = React.useState(null)
+  const [project, setProject] = React.useState<ProjectType | undefined>(undefined)
 
   const { getProjectById, loading } = useProjects()
 
@@ -37,7 +38,7 @@ const ProjectPage = () => {
 
   React.useEffect(() => {
     if (!loading) {
-      if (id && !isNaN(id) && !isNaN(parseFloat(id))) {
+      if (id && !isNaN(parseInt(id)) && !isNaN(parseFloat(id))) {
         const project = getProjectById(parseInt(id))
       
         if (!project) navigate("/")

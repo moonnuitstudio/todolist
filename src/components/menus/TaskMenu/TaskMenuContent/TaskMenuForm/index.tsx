@@ -1,4 +1,3 @@
-import * as yup from "yup"
 import React from 'react'
 import { styled } from '@mui/system'
 
@@ -36,9 +35,9 @@ import useModal from "../../../../../hooks/useModal"
 
 import { ERR_TYPE_BY_MULTIPLE_FIELDS } from "../../../../../types/errTypes"
 
-type FormFields = yup.InferType<typeof TaskSchema>
+import { TaskType, TaskSchemaType } from "../../../../../models/Task"
 
-const initValues:FormFields = { 
+const initValues:TaskSchemaType = { 
     title: '',
     description: '',
     status: 'TODO',
@@ -80,11 +79,11 @@ const DeleteBtn = styled(Button)(() => ({
 }))
 
 interface TaskMenuFormProp {
-    isEdit: boolean;
-    task: FormFields;
+    isEdit?: boolean;
+    task?: null | TaskType;
 }
 
-const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
+const TaskMenuForm = ({ isEdit=false, task }:TaskMenuFormProp) => {
 
     const { projects } = useProjects()
     const { saveTask, deleteTask, updateTask } = useTasks()
@@ -94,15 +93,17 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
     const [ starred, setStarred ] = React.useState(false)
 
     const defaultValues = React.useMemo(() => {
-        return isEdit? {
-            title: task.title,
+        if (!isEdit || task == null || task == undefined) return initValues
+
+        return {
+            title: task.title || "",
             description: task.description,
             status: task.status,
             project_id: (task.project instanceof Object)? task.project.id : 0,
             due_date: task.due_date? task.due_date : undefined,
             due_time: task.due_time,
             starred: task.starred
-        } : initValues
+        }
     }, [isEdit, task])
 
     const selectProjectsValue = React.useMemo(() => {
@@ -117,21 +118,44 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
         }, ..._projects]
     }, [projects])
 
-    const methods = useForm<FormFields>({
+    const methods = useForm<TaskSchemaType>({
         defaultValues,
         resolver: yupResolver(TaskSchema), 
         mode: "onChange"
     })
 
-    const showErrFields = (data:unknown) => {
-        const { err_type } = data
+    interface IDataErr {
+        err_type: string;
+        fields: Map<string, string>;
+    }
+
+    const showErrFields = (data:IDataErr) => {
+        const { err_type, fields } = data
         
         switch(err_type) {
             case ERR_TYPE_BY_MULTIPLE_FIELDS:
-                const { fields } = data
-                
-                for (var field in fields) {
-                    methods.setError(field.toLowerCase(), { type: 'custom', message: fields[field] })
+                for (const field in fields) {
+                    if (field in TaskSchema)
+                        switch (field) {
+                            case "title":
+                                methods.setError("title", { type: 'custom', message: fields.get(field) })
+                                break;
+                            case "description":
+                                methods.setError("description", { type: 'custom', message: fields.get(field) })
+                                break;
+                            case "status":
+                                methods.setError("status", { type: 'custom', message: fields.get(field) })
+                                break;
+                            case "project_id":
+                                methods.setError("project_id", { type: 'custom', message: fields.get(field) })
+                                break;
+                            case "due_date":
+                                methods.setError("due_date", { type: 'custom', message: fields.get(field) })
+                                break;
+                            case "due_time":
+                                methods.setError("due_time", { type: 'custom', message: fields.get(field) })
+                                break;
+                        }
                 }
                 
                 break;
@@ -148,40 +172,43 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
             showCancelButton: true,
             denyButtonText: `Delete Task`
         }).then((result) => {
-            if (result.isDenied) deleteTask(task.id, (status) => {
-                if (status) {
-                    showSuccessToast("Task Deleted")
-                    closeTaskModal()
-                } else {
-                    showErrorToast("ERR")
-                }
-            })
+            if (task) {
+                if (result.isDenied) deleteTask(task.id, (status) => {
+                    if (status) {
+                        showSuccessToast("Task Deleted")
+                        closeTaskModal()
+                    } else {
+                        showErrorToast("ERR")
+                    }
+                })
+            }
         });
     }
 
-    const onSubmit = (data:FormFields) => {
-        data.due_date = prepareDate(data.due_date)
+    const onSubmit = (data:TaskSchemaType) => {
+        if (data.due_date) data.due_date = new Date(prepareDate(data.due_date))
+
         data.starred = starred
 
         if (isEdit) {
-            data.id = task.id
-            //alert("DATE: "+data.due_date)
-            updateTask(data, (status, _data) => {
-                if (status) {
-                    showSuccessToast("The Task has been successfully updated.")
-                    closeTaskModal()
-                } else {
-                    showErrFields(_data)
-                    showErrorToast("The task could not be updated.")
-                }
-            })
+            if (task) {
+                updateTask(task.id, data, (status, _data) => {
+                    if (status) {
+                        showSuccessToast("The Task has been successfully updated.")
+                        closeTaskModal()
+                    } else {
+                        showErrFields((_data as IDataErr))
+                        showErrorToast("The task could not be updated.")
+                    }
+                })
+            }
         } else {
             saveTask(data, (status, _data) => {
                 if (status) {
                     showSuccessToast("New task has been successfully registered.")
                     closeTaskModal()
                 } else {
-                    showErrFields(_data)
+                    showErrFields(_data as IDataErr)
                     showErrorToast("The task could not be registered.")
                 }
             })
@@ -218,7 +245,7 @@ const TaskMenuForm = ({ isEdit, task }:TaskMenuFormProp) => {
                         <AccordionDetails>
                             <Grid container>
                                 <Grid item xs={8} pr={2}>
-                                    <InputBase id="due_date" title='Date' placeholder="Start date" type="date" defaultvalue={defaultValues.due_date} minDate={new Date()} />
+                                    <InputBase id="due_date" title='Date' placeholder="Start date" type="date" defaultvalue={defaultValues.due_date || ""} minDate={new Date()} />
                                 </Grid>
                                 <Grid item xs={4}>
                                     <InputBase id="due_time" title='Time' placeholder="HH:MM" type="time" defaultvalue={defaultValues.due_time} />

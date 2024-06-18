@@ -4,7 +4,8 @@ const AxiosClient = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL}/api`
 })
 
-const generateConfig = (token:string) => {
+// eslint-disable-next-line react-refresh/only-export-components
+export const generateConfig = (token:string) => {
     return {
         headers: {
             "Content-Type": "application/json",
@@ -14,7 +15,3 @@ const generateConfig = (token:string) => {
 }
 
 export default AxiosClient;
-
-export {
-    generateConfig
-}

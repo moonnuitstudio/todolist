@@ -56,7 +56,7 @@ const MenuListItemText = styled(ListItemText)(() => ({
     color: 'black !important'
 }))
 
-type OnChangeHandle = (task:unknown) => void
+type OnChangeHandle = (task:TaskType) => void
 
 interface TaskRowPropsType {
     labelId: string;
@@ -113,6 +113,12 @@ const TaskRow = ({ labelId, row, onChangeStar=null, onDeleteTask=null }:TaskRowP
         });
     }
 
+    const getDate = (date: string | Date):string => {
+        if (typeof date == "string") return date
+
+        return ""
+    }
+
     return (
         <>
         <CustomRow
@@ -141,7 +147,7 @@ const TaskRow = ({ labelId, row, onChangeStar=null, onDeleteTask=null }:TaskRowP
             { isDesktopVersion && (<CustomCell sx={{ textTransform: 'capitalize' }} align="left" style={{ width: 130 }}>{row.status}</CustomCell>) }
             { isTabletOrDesktop && (<CustomCell align="left" style={{ width: 160 }}>
                 <Tooltip title={`${row.due_date} ${row.due_time}`} placement="left">
-                    <span>{row.due_date}</span>
+                    <span>{`${getDate(row.due_date)}`}</span>
                 </Tooltip>
             </CustomCell>) }
             <CustomCell align="right" style={{ width: 20 }}>

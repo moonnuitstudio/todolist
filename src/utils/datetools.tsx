@@ -1,22 +1,25 @@
 export const getYesterdayDate = () => {
-    var date = new Date()
+    const date = new Date()
     date.setDate(date.getDate() - 1);
     return date
 }
 
-export const isDate18orMoreYearsOld = (day, month, year) => {
+export const isDate18orMoreYearsOld = (day:number, month:number, year:number) => {
     return new Date(year+18, month-1, day) <= new Date();
 }
 
 export const getTodayFormat = () => {
-    var today = new Date();
-
-    var options = {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
-    return today.toLocaleString('en-us', options)
+    const today = new Date();
+    
+    return today.toLocaleString('en-us', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    })
 }
 
-export const prepareDateForSever = (_date) => {
+export const prepareDateForSever = (_date:string) => {
     const date = new Date(_date);
 
     const month = `${(date.getMonth() + 1) < 10? '0' : ''}${date.getMonth() + 1}`
@@ -26,7 +29,7 @@ export const prepareDateForSever = (_date) => {
 }
 
 export function prepareDate(date:Date | null) {
-    if (date && !isNaN(date)) {
+    if (date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');

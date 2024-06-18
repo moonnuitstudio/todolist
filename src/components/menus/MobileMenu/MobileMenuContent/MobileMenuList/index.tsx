@@ -49,12 +49,12 @@ const MobileMenuList = () => {
                     </ListItemButton>  
                 </ListItem>
                 {projects && projects instanceof Array && projects.length > 0 && projects.map((project, index) => (
-                    <ListItem key={`${project.ID}-${index}`} disablePadding> 
-                        <ListItemButton onClick={() => { closeMobileMenu(); openProjectModal({ title: project.title }); }} disableRipple>
+                    <ListItem key={`${project.id}-${index}`} disablePadding> 
+                        <ListItemButton onClick={() => { closeMobileMenu(); openProjectModal(project); }} disableRipple>
                             <ListItemIcon>
                                 <WorkIcon />
                             </ListItemIcon>
-                            <ListItemText primary={project.Title} />
+                            <ListItemText primary={project.title} />
                         </ListItemButton>
                     </ListItem>
                 ))}

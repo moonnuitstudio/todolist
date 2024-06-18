@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { styled } from '@mui/system'
 
 import Drawer from '@mui/material/Drawer'

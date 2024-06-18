@@ -1,10 +1,24 @@
 /* eslint-disable no-case-declarations */
-import { 
-    REDU_OPEN_MODAL,
-    REDU_CLOSE_MODAL
-} from '../reducertypes/modalReducerTypes.js'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-const initialStates = {
+import { ProjectType } from '../models/Project';
+
+import { TaskType } from '../models/Task';
+
+export interface IExtraInfo {
+    taskmenu: unknown;
+    projectModal: unknown;
+    mobilemenu: unknown;
+}
+
+export interface IModalReducer {
+    taskmenu: boolean;
+    projectModal: boolean;
+    mobilemenu: boolean;
+    extrainfo: IExtraInfo
+}
+
+const initialStates:IModalReducer = {
     taskmenu: false,
     projectModal: false,
     mobilemenu: false,
@@ -15,22 +29,28 @@ const initialStates = {
     }
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export default function(state = initialStates, action) {
-    const { type } = action
+interface plaModal {
+    key:string;
+    data?: null | TaskType | ProjectType;
+}
 
-    switch(type) {
-        case REDU_OPEN_MODAL:
+
+// eslint-disable-next-line react-refresh/only-export-components
+const ModalsSlice = createSlice({
+    name: 'modals',
+    initialState: initialStates,
+    reducers: {
+        actionOpenModal(state, action:PayloadAction<plaModal>) {
             return {
                 ...state,
                 [action.payload.key]: true,
                 extrainfo: {
                     ...state.extrainfo,
-                    [action.payload.key]: action.payload.info
+                    [action.payload.key]: action.payload.data
                 }
             }
-
-        case REDU_CLOSE_MODAL:
+        },
+        actionCloseModal(state, action:PayloadAction<string>) {
             return {
                 ...state,
                 [action.payload]: false,
@@ -39,8 +59,10 @@ export default function(state = initialStates, action) {
                     [action.payload]: null
                 }
             }
-
-        default:
-            return state
+        }
     }
-}
+})
+
+export const { actionOpenModal, actionCloseModal } = ModalsSlice.actions
+
+export default ModalsSlice.reducer

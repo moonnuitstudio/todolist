@@ -9,7 +9,7 @@ import { useResizeDetector } from 'react-resize-detector'
 
 import useModal from '../../../hooks/useModal'
 
-const MenuContainer = styled(Box)(({ theme }) => ({
+const MenuContainer = styled(Box)(() => ({
   position: 'absolute',
   bottom: 0,
   left: 0,
@@ -35,11 +35,7 @@ const AddTaskBtn = styled(Fab)(() => ({
   }
 }))
 
-const DivBtnDec = styled('div', {
-  shouldForwardProp: (prop) => prop !== "width" && prop !== "height"
-})(({ theme, width, height }) => ({
-  width: `${width + 10}px`,
-  height: `${height + 10}px`,
+const DivBtnDec = styled('div')(({ theme}) => ({
   position: 'absolute',
   bottom: '10px',
   left: '50%',
@@ -59,7 +55,7 @@ const MobilSubMenu = () => {
         <AddTaskBtn aria-label="add-task" ref={ref} onClick={() => {openModal()}}>
           <AddIcon />
         </AddTaskBtn>
-        <DivBtnDec width={width} height={height} />
+        <DivBtnDec sx={{ width: `${(width || 0) + 10}px`, height: `${(height || 0) + 10}px`, }} />
     </div>
   )
 }

@@ -1,47 +1,58 @@
-/* eslint-disable no-case-declarations */
-import { 
-    REDU_LOAD_PROJECTS,
-    REDU_SAVE_PROJECTS,
-    REDU_UPDATE_PROJECTS,
-    REDU_DELETE_PROJECTS,
-} from '../reducertypes/projectsReducerTypes.js'
+// /* eslint-disable no-case-declarations */
+// import { 
+//     REDU_LOAD_PROJECTS,
+//     REDU_SAVE_PROJECTS,
+//     REDU_UPDATE_PROJECTS,
+//     REDU_DELETE_PROJECTS,
+// } from '../reducertypes/projectsReducerTypes'
 
-const initialStates = {
+import { ProjectType } from '../models/Project'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
+export interface IProjectReducer {
+    projects: ProjectType[];
+    loading: boolean;
+}
+
+const initialStates:IProjectReducer = {
     projects: [],
     loading: true,
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export default function(state = initialStates, action) {
-    const { type } = action
-
-    switch(type) {
-        case REDU_LOAD_PROJECTS:
+const ProjectsSlice = createSlice({
+    name: 'projects',
+    initialState: initialStates,
+    reducers: {
+        actionLoadProjects(state, action:PayloadAction<ProjectType[]>) {
             return {
                 ...state,
                 projects: action.payload,
                 loading: false,
             }
-
-        case REDU_SAVE_PROJECTS: 
+        },
+        actionSaveProject(state, action:PayloadAction<ProjectType>) {
             return {
                 ...state,
                 projects: [...state.projects, action.payload]
             }
-
-        case REDU_UPDATE_PROJECTS:
+        },
+        actionUpdateProject(state, action:PayloadAction<ProjectType>) {
             return {
                 ...state,
                 projects: state.projects.map(project => (project.id == action.payload.id)? action.payload : project)
             }
-
-        case REDU_DELETE_PROJECTS:
+        },
+        actionDeleteProject(state, action:PayloadAction<number>) {
             return {
                 ...state,
                 projects: state.projects.filter(project => project.id != action.payload)
             }
-
-        default:
-            return state
+        }
     }
-}
+})
+
+
+export const { actionLoadProjects, actionSaveProject, actionUpdateProject, actionDeleteProject } = ProjectsSlice.actions
+
+export default ProjectsSlice.reducer

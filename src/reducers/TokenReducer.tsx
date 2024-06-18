@@ -1,31 +1,34 @@
 /* eslint-disable no-case-declarations */
-import { 
-    REDU_SAVE_TOKEN,
-    REDU_FORGET_TOKEN
-} from '../reducertypes/tokenReducerTypes.js'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-const initialStates = {
+export interface ITokenReducer {
+    token:null | string
+}
+
+const initialStates:ITokenReducer = {
     token: null
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export default function(state = initialStates, action) {
-    const { type } = action
-
-    switch(type) {
-        case REDU_SAVE_TOKEN:
+const TokenSlice = createSlice({
+    name: 'token',
+    initialState: initialStates,
+    reducers: {
+        actionSaveToken(state, action:PayloadAction<string>) {
             return {
                 ...state,
                 token: action.payload
             }
-
-        case REDU_FORGET_TOKEN:
+        },
+        actionForgetToken(state) {
             return {
                 ...state,
                 token: null
             }
-
-        default:
-            return state
+        }
     }
-}
+})
+
+export const { actionSaveToken, actionForgetToken } = TokenSlice.actions
+
+export default TokenSlice.reducer

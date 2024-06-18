@@ -12,11 +12,8 @@ import MainMenu from "./MainMenu"
 import { useAuth0 } from "@auth0/auth0-react"
 import { useResizeDetector } from "react-resize-detector"
 
-import MobilSubMenu from "../../components/menus/MobilSubMenu"
-
 import useToken from "../../hooks/useToken"
 import useProjects from "../../hooks/useProjects"
-import useResponsive from "../../hooks/useResponsive"
 
 const DashboardContainer = styled(Container)(() => ({
     width: '100vw !important',
@@ -29,7 +26,7 @@ const DashboardContainer = styled(Container)(() => ({
 
 const BoxContentContainer = styled(Stack, {
     shouldForwardProp: (prop) => prop !== "headerheight"
-})(({ theme, headerheight }) => ({
+})<{headerheight:number}>(({ theme, headerheight }) => ({
     padding: '0px',
     width: '100%',
     height: `calc(100% - ${headerheight}px)`,
@@ -42,9 +39,6 @@ const BoxContentContainer = styled(Stack, {
 }))
 
 const NewDashboardLayout = () => {
-
-    const { isMobile } = useResponsive()
-
     const { saveToken, token } = useToken()
     const { loadProject } = useProjects()
 
@@ -62,15 +56,8 @@ const NewDashboardLayout = () => {
         }
 
         if (isAuthenticated && !token) {
-            const auth0_domain = import.meta.env.VITE_AUTH0_DOMAIN;
-            const audience = `https://${auth0_domain}/api/v2/`;
-            
             const getToken = async () => {
-                const token = await getAccessTokenSilently({
-                    ignoreCache: true,
-                    audience: audience,
-                    scope: '',
-                });
+                const token = await getAccessTokenSilently();
 
                 saveToken(token)
                 loadProject(token)
@@ -84,10 +71,9 @@ const NewDashboardLayout = () => {
     return (
         <DashboardContainer>
             <HeaderToolbar appref={HeaderRef} onHandleOpen={handleOpenMenu} />
-            <BoxContentContainer headerheight={headerHeight}>
+            <BoxContentContainer headerheight={headerHeight || 0}>
                 <MainMenu menuWidth={250} tabletMenuWidth={350} open={menuOpen} onMenuClose={() => setMenuOpen(false)} />
                 <Outlet />
-                {/* {isMobile && (<MobilSubMenu />)} */}
             </BoxContentContainer>
         </DashboardContainer>
     )

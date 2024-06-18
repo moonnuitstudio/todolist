@@ -66,6 +66,10 @@ interface ProjectPagePropsType {
     useproject?: boolean;
 }
 
+interface IDataErr {
+    err_type: string;
+}
+
 const PageHeader = ({ project = null, useproject = false }: ProjectPagePropsType) => {
 
     const { isLoading } =  useAuth0()
@@ -95,20 +99,22 @@ const PageHeader = ({ project = null, useproject = false }: ProjectPagePropsType
             denyButtonText: `Delete Project`
         }).then((result) => {
             if (result.isDenied) {
-                deleteProject(project?.id, (status, data) => {
-                    if (status) {
-                        Swal.fire("Project Deleted", "", "success");
-                        navigate("/")
-                    } else {
-                        const { err_type } = data
+                if (project) {
+                    deleteProject(project?.id, (status, data) => {
+                        if (status) {
+                            Swal.fire("Project Deleted", "", "success");
+                            navigate("/")
+                        } else {
+                            const { err_type } = (data as IDataErr)
 
-                        switch(err_type) {
-                            case ERR_TYPE_MESSAGE:
-                                showErrorToast("There was an error!")
-                                break
+                            switch(err_type) {
+                                case ERR_TYPE_MESSAGE:
+                                    showErrorToast("There was an error!")
+                                    break
+                            }
                         }
-                    }
-                })
+                    })
+                }
             }
         });
     }

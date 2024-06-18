@@ -19,10 +19,11 @@ import Backdrop from '@mui/material/Backdrop'
 
 import { useResizeDetector } from 'react-resize-detector'
 import useResponsive from '../../hooks/useResponsive'
+import { ProjectType } from '../../models/Project'
 
 const ModalBox = styled(Box, {
     shouldForwardProp: (props) => props !== "boxwidth" && props !== "boxheight"
-})(({ theme, boxwidth, boxheight }) => ({
+})<{ boxwidth: undefined | number, boxheight: undefined | number }>(({ theme, boxwidth, boxheight }) => ({
     position: 'absolute',
     top: `calc(50% - ${ boxheight?  boxheight / 2 : 100 }px)`,
     left: `calc(50% - ${ boxwidth?  boxwidth / 2 : 100 }px)`,
@@ -35,7 +36,7 @@ const ModalBox = styled(Box, {
     [theme.breakpoints.down("sm")]: {
         width: '100vw',
         left: '0 !important',
-        top: `calc(100% - ${boxheight + 50}px)`,
+        top: `calc(100% - ${(boxheight? boxheight : 0) + 50}px)`,
         paddingBottom: '50px',
         borderRadius: '0px !important'
     }
@@ -72,7 +73,7 @@ const ProjectModal = () => {
                             {isMobile? (<KeyboardArrowDownIcon />):(<CloseIcon />)}
                         </IconButton>
                     </Box>
-                    <ProjectModalForm isEdit={isEdit} project={data} handleCloseModal={closeModal} />
+                    <ProjectModalForm isEdit={isEdit} project={data? (data as ProjectType) : null} handleCloseModal={closeModal} />
                 </ModalBox>
 
             </Slide>

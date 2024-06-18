@@ -47,6 +47,14 @@ const AvatarInfoMenu = styled(Stack)(() => ({
   borderBottom: '1px solid rgba(0, 0, 0, .3)'
 }))
 
+const AvatarInfoTypography = styled(Typography)(() => ({
+  color: 'black',
+  fontFamily: "'Montserrat'",
+  fontWeight: '400',
+  fontSize: '.95rem',
+  lineHeight: '1.2rem',
+}))
+
 const Profile = () => {
 
   const { user, isAuthenticated, logout, isLoading } = useAuth0()
@@ -65,7 +73,7 @@ const Profile = () => {
         ) : (
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disableRipple>
-              <Avatar sx={{ width: 30, height: 30 }}  alt="Remy Sharp" src={ isAuthenticated && user?.picture } />
+              <Avatar sx={{ width: 30, height: 30 }}  alt="Remy Sharp" src={ isAuthenticated? user?.picture : "" } />
               <KeyboardArrowDownIcon sx={{ color: 'black' }} />
             </IconButton>
           </Tooltip>
@@ -91,8 +99,8 @@ const Profile = () => {
           <AvatarInfoMenu>
             <Avatar sx={{ width: 48, height: 48 }} alt="Remy Sharp" src={user?.picture} />
             <Box sx={{ height: '10px' }} />
-            <Typography variant='avatarinfo' className='non-mouse-event'>{user?.nickname}</Typography>
-            <Typography variant='avatarinfo' className='non-mouse-event'>{user?.email}</Typography>
+            <AvatarInfoTypography variant='body1' className='non-mouse-event'>{user?.nickname}</AvatarInfoTypography>
+            <AvatarInfoTypography variant='body1' className='non-mouse-event'>{user?.email}</AvatarInfoTypography>
           </AvatarInfoMenu>
         )}
         <MenuItem onClick={handleCloseUserMenu} onClickCapture={() => { logout() }}>

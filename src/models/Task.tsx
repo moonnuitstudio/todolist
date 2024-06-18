@@ -1,34 +1,22 @@
 import * as yup from "yup"
+
 import { TaskSchema } from "../schemas";
+
+import { ProjectType } from "./Project";
 
 export type TaskSchemaType = yup.InferType<typeof TaskSchema>
 
 export interface TaskType {
     id: number;
     title: string;
-    due: string;
+    description: string;
     status: string;
-    project: number;
+    project_id: null | number;
+    project: null | ProjectType;
+    due_date: Date;
+    due_time: string;
     starred: boolean;
 }  
-
-export function createTableTask(
-    id: number,
-    title: string,
-    due: string,
-    status: string,
-    project: number,
-    starred: boolean
-): TaskType {
-    return {
-      id,
-      title,
-      due,
-      status,
-      project,
-      starred
-    };
-}
 
 export interface TableTaskHeadCell {
     disablePadding: boolean;
@@ -58,7 +46,7 @@ export const TBLHEADTASK: readonly TableTaskHeadCell[] = [
         label: 'Status',
         order: 'status',
     },{
-        id: 'due',
+        id: 'due_date',
         numeric: false,
         disablePadding: true,
         label: 'Due',
@@ -74,7 +62,7 @@ export const TABLETBLHEADTASK: readonly TableTaskHeadCell[] = [
         label: 'Task',
         order: 'title',
     },{
-        id: 'due',
+        id: 'due_date',
         numeric: false,
         disablePadding: true,
         label: 'Due',

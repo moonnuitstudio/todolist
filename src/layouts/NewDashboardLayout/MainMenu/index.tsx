@@ -33,6 +33,14 @@ const MainMenuContainerContent = styled(Box)(({ theme }) => ({
     }
 }))
 
+const AvatarInfoTypography = styled(Typography)(() => ({
+    color: 'black',
+    fontFamily: "'Montserrat'",
+    fontWeight: '400',
+    fontSize: '.95rem',
+    lineHeight: '1.2rem',
+}))
+
 type OnMenuCloseType = () => void
 
 interface MainMenuPropsType {
@@ -89,8 +97,8 @@ const MainMenu = ({ menuWidth, tabletMenuWidth, open, onMenuClose }: MainMenuPro
                             <Skeleton animation="wave" variant="circular" width={80} height={80} />
                         </Stack>
                         <Stack sx ={{ width: '100%', marginTop: '20px', gap: '5px', paddingBottom: '20px', marginBottom: '10px', borderBottom: '1px solid rgba(0,0,0,.2)' }} flexDirection="column" alignItems="center">
-                            <Typography variant='avatarinfo' sx={{ width: '100%' }}><Skeleton animation="wave" /></Typography>
-                            <Typography variant='avatarinfo' sx={{ width: '100%' }}><Skeleton animation="wave" /></Typography>
+                            <AvatarInfoTypography sx={{ width: '100%' }}><Skeleton animation="wave" /></AvatarInfoTypography>
+                            <AvatarInfoTypography sx={{ width: '100%' }}><Skeleton animation="wave" /></AvatarInfoTypography>
                         </Stack>
                     </>)}
                     {isAuthenticated && (<>
@@ -98,8 +106,8 @@ const MainMenu = ({ menuWidth, tabletMenuWidth, open, onMenuClose }: MainMenuPro
                             <Avatar sx={{ width: 80, height: 80 }}  alt="Remy Sharp" src={ isAuthenticated && user?.picture } />
                         </Stack>
                         <Stack sx ={{ width: '100%', marginTop: '20px', gap: '5px', paddingBottom: '20px', marginBottom: '10px', borderBottom: '1px solid rgba(0,0,0,.2)' }} flexDirection="column" alignItems="center">
-                            <Typography variant='avatarinfo' className='non-mouse-event'>{user?.nickname}</Typography>
-                            <Typography variant='avatarinfo' className='non-mouse-event'>{user?.email}</Typography>
+                            <AvatarInfoTypography className='non-mouse-event'>{user?.nickname}</AvatarInfoTypography>
+                            <AvatarInfoTypography className='non-mouse-event'>{user?.email}</AvatarInfoTypography>
                         </Stack>
                     </>)}
                 </>)}

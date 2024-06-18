@@ -53,7 +53,7 @@ const Header = ({ appref }:HeaderType) => {
                         <HeaderTypography variant="h3">To Do <SpanList>List</SpanList></HeaderTypography>
                     </Box>
                     {!isMobile && (<ProfileAvatar />)}
-                    {isTabletOrMobile && (<IconButton disableRipple aria-label="open menu" sx={{ paddingRight: '0px', color: 'black' }} onClick={openModal}><MenuIcon /></IconButton>)}
+                    {isTabletOrMobile && (<IconButton disableRipple aria-label="open menu" sx={{ paddingRight: '0px', color: 'black' }} onClick={() => { openModal() }}><MenuIcon /></IconButton>)}
                 </Toolbar>
             </HeaderContainer>
         </AppBar>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -24,6 +24,7 @@ import EnhancedTableHead from './EnhancedTableHead'
 import TaskRow from './TaskRow'
 
 import { ProjectType } from '../../../models/Project'
+import { TaskType } from '../../../models/Task'
 
 import useResponsive from '../../../hooks/useResponsive'
 import useModal from '../../../hooks/useModal'
@@ -43,13 +44,13 @@ interface TaskTablePropsType {
 }
 
 const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => {
-    const [loadingtable, setLoadingTable] = React.useState(true)
-    const [rows, setRows] = React.useState([])
-    const [totalrows, setTotalRows] = React.useState(0)
+    const [loadingtable, setLoadingTable] = React.useState<boolean>(true)
+    const [rows, setRows] = React.useState<TaskType[]>([])
+    const [totalrows, setTotalRows] = React.useState<number>(0)
     
     const { token } = useToken()
     const { openModal } = useModal("taskmenu")
-    const { isMobile, isTabletOrDesktop } = useResponsive()
+    const { isMobile } = useResponsive()
 
     const { isLoading, isAuthenticated } = useAuth0()
 
@@ -66,7 +67,7 @@ const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => 
         setLoadingTable(true)
     }
 
-    const handleRequestSort = ( event: React.MouseEvent<unknown>, property: string) => {
+    const handleRequestSort = ( _event: React.MouseEvent<unknown>, property: string) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
@@ -75,7 +76,7 @@ const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => 
 
     const emptyRows = React.useMemo<number>( () => (page > 0 )? rowsPerPage - rows.length : 0, [page, rowsPerPage, rows])
 
-    const handleChangePage = (event: unknown, newPage: number) => { 
+    const handleChangePage = (_event: unknown, newPage: number) => { 
         setPage(newPage)
         reloadTasksRows();
     }
@@ -86,7 +87,7 @@ const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => 
         reloadTasksRows();
     }
 
-    const handleStartRow = (task) => {
+    const handleStartRow = (task:TaskType) => {
         updateStarOnTask(task.id, task.starred, (status) => {
             if (status) showSuccessToast("Task Updated")
             else showErrorToast("ERR")
@@ -94,11 +95,10 @@ const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => 
         setRows(rows.map(row => (row.id == task.id)? task : row))
     }
 
-    const handleDeleteTask = (task) => {
+    const handleDeleteTask = (task:TaskType) => {
         deleteTaskNoReload(task.id, (status) => {
             if (status) {
                 showSuccessToast("Task Deleted")
-                // TODO: ADD REMOVE ELEMENT
                 reloadTasksRows()
             }
             else showErrorToast("ERR")
@@ -114,7 +114,13 @@ const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => 
             reloadTasksRows()
         }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [project, useproject])
+
+    interface ITasksResponse {
+        total: number;
+        tasks: TaskType[]
+    }
 
     React.useEffect(() => {
         if (isLoading || !isAuthenticated || !token || !reload) return
@@ -124,11 +130,15 @@ const TaskTable = ({ project=null, useproject=false } : TaskTablePropsType ) => 
         const handleStatus = (status:boolean, data:unknown) => {
 
             if (status) {
-                setTotalRows(data.total)
-                setRows(data.tasks)
+                if (data instanceof Object) {
+                    const dataTask = (data as ITasksResponse)
 
-                if (data.tasks.length == 0 && page > 0) {
-                    setPage(0)
+                    setTotalRows(dataTask.total)
+                    setRows(dataTask.tasks)
+
+                    if (dataTask.tasks.length == 0 && page > 0) {
+                        setPage(0)
+                    }
                 }
             }
 

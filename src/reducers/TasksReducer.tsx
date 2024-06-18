@@ -1,31 +1,33 @@
-import {
-    REDU_RELOAD_TASKS,
-    REDU_STOPRELOAD_TASKS
-} from '../reducertypes/taskReducerTypes.js'
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialStates = {
+export interface ITaskReducer {
+    reload: boolean;
+}
+
+const initialStates:ITaskReducer = {
     reload: true,
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export default function(state = initialStates, action) {
-    const { type } = action
 
-    switch(type) {
-
-        case REDU_RELOAD_TASKS:
+const TasksSlice = createSlice({
+    name: 'token',
+    initialState: initialStates,
+    reducers: {
+        actionReloadTask(state) {
             return {
                 ...state,
                 reload: true,
             }
-
-        case REDU_STOPRELOAD_TASKS:
+        },
+        actionStopReloadTask(state) {
             return {
                 ...state,
                 reload: false,
             }
-
-        default:
-            return state
+        }
     }
-}
+})
+
+export const { actionReloadTask, actionStopReloadTask } = TasksSlice.actions
+
+export default TasksSlice.reducer

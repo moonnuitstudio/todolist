@@ -1,5 +1,3 @@
-import React from "react"
-
 import { styled } from '@mui/system'
 
 import Box from '@mui/material/Box'
@@ -8,11 +6,8 @@ import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-import { useTheme } from "@mui/material"
 
-import { prepareDateForSever } from '../../../../utils/datetools'
-
-import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form"
+import { FieldValues, UseFormSetValue } from "react-hook-form"
 
 interface KeyValue {
     id: number | string;
@@ -21,9 +16,8 @@ interface KeyValue {
 
 interface InputSelectPropsTypes {
     id: string;
-    value: string;
+    value: number | string | Date;
     setValue: UseFormSetValue<FieldValues>;
-    err?: boolean;
     disabled?: boolean;
     values?: KeyValue[];
 }
@@ -57,18 +51,9 @@ const SelectElement = styled(Select)(() => ({
     }
 }))
 
-const InputSelect = ({ id, value, setValue, err=false, disabled=false, values=[] }:InputSelectPropsTypes) => {
+const InputSelect = ({ id, value, setValue, disabled=false, values=[] }:InputSelectPropsTypes) => {
 
-    // const theme = useTheme()
-
-    // const selectColor = React.useMemo(() => {
-    //     if (disabled) return 'rgba(0,0,0,.3)'
-    //     else if (err) return 'rgb(142, 49, 49)'
-
-    //     return '#206C65'
-    // }, [disabled, err])
-
-    const handleChange = (event: SelectChangeEvent) => {
+    const handleChange = (event: SelectChangeEvent<unknown>) => {
         setValue(id, event.target.value, { shouldValidate: true }); 
     };
 
@@ -79,7 +64,7 @@ const InputSelect = ({ id, value, setValue, err=false, disabled=false, values=[]
                     id={`input-${id}`} 
                     sx={{ width: '100%' }}
                     value={value}
-                    onChange={handleChange} 
+                    onChange={(event) => { handleChange(event) }} 
                     MenuProps={{ 
                         sx: { 
                             '& ul': {
@@ -92,6 +77,7 @@ const InputSelect = ({ id, value, setValue, err=false, disabled=false, values=[]
                             }
                         }
                     }} 
+                    disabled={disabled}
                     displayEmpty
                 >
                     {

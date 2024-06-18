@@ -9,7 +9,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 
 import { visuallyHidden } from '@mui/utils'
 
-import { TBLHEADTASK, TaskType, MOBILETBLHEADTASK, TABLETBLHEADTASK } from '../../../../models/Task'
+import { TBLHEADTASK, MOBILETBLHEADTASK, TABLETBLHEADTASK } from '../../../../models/Task'
 
 import useResponsive from '../../../../hooks/useResponsive'
 

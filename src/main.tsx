@@ -3,7 +3,7 @@ import { createBrowserHistory } from "history";
 
 import ReactDOM from 'react-dom/client'
 
-import { Auth0Provider } from "@auth0/auth0-react"
+import { AppState, Auth0Provider } from "@auth0/auth0-react"
 
 import App from './App.tsx'
 import './index.css'
@@ -13,7 +13,7 @@ import { setupAuth0Settings } from './config'
 const config = setupAuth0Settings();
 const history = createBrowserHistory();
 
-const onRedirectCallback = (appState) => { history.push( appState && appState.returnTo ? appState.returnTo : window.location.pathname ) };
+const onRedirectCallback = (appState?: AppState) => { history.push( appState && appState.returnTo ? appState.returnTo : window.location.pathname ) };
 
 const providerConfig = {
   domain: config.domain,

@@ -1,11 +1,20 @@
-import { createStore, applyMiddleware, compose } from 'redux'
-import { thunk } from 'redux-thunk'
-import reducers from './reducers'
+import { configureStore } from '@reduxjs/toolkit'
 
-const store = createStore(reducers, compose(applyMiddleware(thunk),
-    typeof window === 'object' &&
-    typeof window.__REDUX_DEVTOOLS_EXTENSION__  !== 'undefined' ?
-    window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
-))
+import ModalsReducer from "./reducers/ModalsReducer"
+import TokenReducer from "./reducers/TokenReducer"
+import ProjectsReducer from "./reducers/ProjectsReducer"
+import TasksReducer from "./reducers/TasksReducer"
+
+const store = configureStore({
+    reducer: {
+        modals: ModalsReducer,
+        token: TokenReducer,
+        projects: ProjectsReducer,
+        tasks: TasksReducer,
+    }
+})
+
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
 
 export default store

@@ -1,18 +1,13 @@
-import React from 'react'
 import { styled } from '@mui/system'
 
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Avatar from '@mui/material/Avatar'
 
 import MobileMenuList from './MobileMenuList'
 
 import CloseIcon from '@mui/icons-material/Close'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-
-import useModal from '../../../../hooks/useModal'
 
 type onCloseModalType = () => void
 

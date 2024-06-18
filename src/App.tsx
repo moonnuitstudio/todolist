@@ -6,9 +6,7 @@ import theme from './theme'
 import { Provider } from 'react-redux'
 
 import NewDashboardLayout from './layouts/NewDashboardLayout'
-import DashboardLayout from './layouts/DashboardLayout'
 
-import DashboardPage from './pages/DashboardPage'
 import NewDashboardPage from './pages/NewDashboardPage'
 
 import ProjectPage from './pages/ProjectPage'
@@ -42,10 +40,6 @@ function App() {
           <CssBaseline />
 
           <Routes>
-            <Route path='/test' element={<DashboardLayout />}>
-              <Route index element={<DashboardPage />} />
-            </Route>
-
             <Route path='/' element={<NewDashboardLayout />}>
               <Route index element={<NewDashboardPage />} />
               <Route path='project/:id' element={<ProjectPage />} />

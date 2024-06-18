@@ -42,21 +42,6 @@ const theme = createTheme({
     breakpoints,
     palette,
     typography: {
-        avatartitle: {
-            color: 'black',
-            fontFamily: "'League_Spartan'",
-            fontWeight: '800',
-            fontSize: '1.3rem',
-            lineHeight: '1.2rem',
-            textTransform: 'uppercase',
-        },
-        avatarbody: {
-            color: 'black',
-            fontFamily: "'Montserrat'",
-            fontWeight: '300',
-            fontSize: '1rem',
-            lineHeight: '1.2rem',
-        },
         h2: {
             color: 'rgba(0,0,0,.7)',
             fontFamily: "'League_Spartan'",
@@ -98,14 +83,7 @@ const theme = createTheme({
             fontWeight: '400',
             fontSize: '1.4rem',
             lineHeight: '1.1rem',
-        }, 
-        avatarinfo: {
-            color: 'black',
-            fontFamily: "'Montserrat'",
-            fontWeight: '400',
-            fontSize: '.95rem',
-            lineHeight: '1.2rem',
-        }
+        },
     },
     components: {
         MuiCssBaseline: {
@@ -186,11 +164,9 @@ const theme = createTheme({
         MuiTypography: {
             defaultProps: {
                 variantMapping: {
-                    avatartitle: 'p',
-                    avatarbody: 'p',
-                    avatarinfo: 'p'
+                    //avatarinfo: 'p'
                 }
-            }
+            },
         },
         MuiTableSortLabel: {
             styleOverrides: {

@@ -2,8 +2,6 @@ import React from 'react'
 
 import DatePicker, { DateObject } from "react-multi-date-picker";
 
-import styles from './InputDate.module.css'
-
 import styled from 'styled-components';
 import { FieldValues, UseFormSetValue } from "react-hook-form";
 
@@ -35,22 +33,19 @@ const DateContainer = styled.div`
 interface InputDateType {
   id: string;
   placeholder: string;
-  value: string;
-  error?: boolean;
-  //register: UseFormRegister<FieldValues>;
+  value: number | string  | Date;
   setValue: UseFormSetValue<FieldValues>;
   disabled?: boolean;
   minDate?: undefined | Date;
 }
 
-const InputDate:React.FC<InputDateType> = ({ id, placeholder, value, setValue, error=false, disabled=false, minDate=undefined }) => {
+const InputDate:React.FC<InputDateType> = ({ id, placeholder, value, setValue, disabled=false, minDate=undefined }) => {
 
   const datevalue = React.useMemo(() => {
 
     if (value) {
       if (value instanceof DateObject) return value
-      else if (value !== "") {
-        
+      else if (typeof value === "string" && value !== "") {
         const [y, m, d] = value.split("-")
 
         return new DateObject().set({
@@ -64,10 +59,14 @@ const InputDate:React.FC<InputDateType> = ({ id, placeholder, value, setValue, e
     return null
   }, [value])
 
+  const dateToString = (date: DateObject) => {
+    return `${date.year}-${date.month}-${date.day}`
+  }
+
   return (
     <DateContainer>
       <DatePicker id={`input-${id}`} value={datevalue} disabled={disabled} readOnly={disabled} minDate={minDate} format="MM/DD/YYYY" placeholder={placeholder} onChange={(date:DateObject) => { 
-        setValue(id, date?.isValid ? date : null, { shouldValidate: true }); 
+        setValue(id, date?.isValid ? dateToString(date) : "", { shouldValidate: true }); 
       }} />
     </DateContainer>
   )

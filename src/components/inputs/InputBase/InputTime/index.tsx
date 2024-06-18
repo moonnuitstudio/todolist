@@ -34,22 +34,21 @@ const DateContainer = styled.div`
 interface InputTimeType {
   id: string;
   placeholder: string;
-  error?: boolean;
-  value: string;
+  value: number | string | DateObject;
   setValue: UseFormSetValue<FieldValues>;
   disabled?: boolean;
 }
 
-const InputTime:React.FC<InputTimeType> = ({ id, placeholder, value, setValue, disabled=false, error=false }) => {
+const InputTime:React.FC<InputTimeType> = ({ id, placeholder, value, setValue, disabled=false}) => {
 
 
   const datevalue = React.useMemo(() => {
 
     if (value) {
       if (value instanceof DateObject) return value
-      else if (value !== "") {
+      else if (typeof value === "string" && value !== "") {
         
-        const [h, m] = value.split(":")
+        const [h, m] = `${value}`.split(":")
 
         return new DateObject().set({
           hour: parseInt(h? h : "0"),

@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { styled } from '@mui/system'
-
 import Typography from '@mui/material/Typography'
 
 interface EventFormTitleProps {

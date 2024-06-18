@@ -10,6 +10,8 @@ import TaskMenuForm from './TaskMenuForm'
 
 import useModal from '../../../../hooks/useModal'
 
+import { TaskType } from '../../../../models/Task'
+
 type onCloseModalType = () => void
 
 interface TaskMenuContentPropsType {
@@ -29,7 +31,7 @@ const TaskMenuContent = ({ onCloseModal }:TaskMenuContentPropsType) => {
           <CloseIcon />
         </IconButton>
       </Box>
-      <TaskMenuForm isEdit={isEdit} task={extradata} />
+      <TaskMenuForm isEdit={isEdit} task={(extradata as TaskType)} />
     </>
   )
 }

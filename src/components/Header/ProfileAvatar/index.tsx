@@ -30,8 +30,21 @@ const AvatarTextContainer = styled(Box)(() => ({
     alignItems: 'flex-end'
 }))
 
-const AvatarSubMenu = styled(Menu)(() => ({
+const AvatarTitleTypography = styled(Typography)(() => ({
+    color: 'black',
+    fontFamily: "'League_Spartan'",
+    fontWeight: '800',
+    fontSize: '1.3rem',
+    lineHeight: '1.2rem',
+    textTransform: 'uppercase',
+}))
 
+const AvatarBodyTypography = styled(Typography)(() => ({
+    ccolor: 'black',
+    fontFamily: "'Montserrat'",
+    fontWeight: '300',
+    fontSize: '1rem',
+    lineHeight: '1.2rem',
 }))
 
 const ProfileAvatar = () => {
@@ -51,18 +64,18 @@ const ProfileAvatar = () => {
             <AvatarContainer>
                 {isTabletOrDesktop && (
                     <AvatarTextContainer>
-                        <Typography variant='avatartitle'>Hi, { isAuthenticated && user?.name }</Typography>
-                        <Typography variant='avatarbody'>It is good to see you again</Typography>
+                        <AvatarTitleTypography variant='body1'>Hi, { isAuthenticated && user?.name }</AvatarTitleTypography>
+                        <AvatarBodyTypography variant='body1'>It is good to see you again</AvatarBodyTypography>
                     </AvatarTextContainer>
                 )}
                 <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="Remy Sharp" src={ isAuthenticated && user?.picture } />
+                        <Avatar alt="Remy Sharp" src={ isAuthenticated? user?.picture : "" } />
                     </IconButton>
                 </Tooltip>
             </AvatarContainer>
 
-            <AvatarSubMenu
+            <Menu
                 id="menu-user-profile"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
@@ -80,7 +93,7 @@ const ProfileAvatar = () => {
                 <MenuItem onClick={handleCloseUserMenu} onClickCapture={() => { logout() }}>
                     <Typography textAlign="center">Log Out</Typography>
                 </MenuItem>
-            </AvatarSubMenu>
+            </Menu>
         </>
     )
 }

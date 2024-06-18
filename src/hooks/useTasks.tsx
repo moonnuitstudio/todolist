@@ -1,12 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux'
 
-import { actionReloadTask, actionStopReloadTask } from '../actions/TasksReducerActions'
+import { actionReloadTask, actionStopReloadTask } from '../reducers/TasksReducer'
 
 import { TaskSchemaType } from "../models/Task";
 
 import useToken from './useToken'
 
 import AxiosClient, { generateConfig } from '../utils/AxiosClient'
+
+import { RootState, AppDispatch } from '../store'
+
+import { ITaskReducer } from '../reducers/TasksReducer'
 
 type ResultHandleType = (r:boolean, data:null | unknown) => void
 
@@ -18,13 +22,13 @@ interface QueryTaskType {
 }
 
 const useTasks = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
     const { token: authToken } = useToken()
 
-    const { reload } = useSelector(state => state.tasks)
+    const { reload } = useSelector<RootState, ITaskReducer>(state => state.tasks)
 
     const saveTask = (project:TaskSchemaType, result:null | ResultHandleType=null) => {
-        AxiosClient.post("/tasks", project, generateConfig(authToken)).then(() => {
+        AxiosClient.post("/tasks", project, generateConfig(authToken || "")).then(() => {
             dispatch(actionReloadTask())
             result?.(true, null)
         }).catch(({ response: { data } }) => {
@@ -32,8 +36,8 @@ const useTasks = () => {
         })
     }
 
-    const updateTask = (project:TaskSchemaType, result:null | ResultHandleType=null) => {
-        AxiosClient.put(`/tasks/${project.id}`, project, generateConfig(authToken)).then(() => {
+    const updateTask = (id:number, project:TaskSchemaType, result:null | ResultHandleType=null) => {
+        AxiosClient.put(`/tasks/${id}`, project, generateConfig(authToken || "")).then(() => {
             dispatch(actionReloadTask())
             result?.(true, null)
         }).catch(({ response: { data } }) => {
@@ -42,15 +46,20 @@ const useTasks = () => {
     }
 
     const updateStarOnTask = (id:number, star:boolean, result:null | ResultHandleType=null) => {
-        AxiosClient.put(`/tasks/${id}/star`, { starred: star }, generateConfig(authToken)).then(() => {
+        AxiosClient.put(`/tasks/${id}/star`, { starred: star }, generateConfig(authToken || "")).then(() => {
             result?.(true, null)
-        }).catch(({ response: { data } }) => {
+        }).catch(() => {
             result?.(false, null)
         })
     }
 
     const getAllTasks = (token: null | string = null, query: QueryTaskType, result:null | ResultHandleType=null) => {
-        AxiosClient.get(`/tasks?limit=${query.limit}&page=${query.page}&orderby=${query.orderBy}&order=${query.order}`, generateConfig(token? token : authToken)).then(({ data }) => {
+        let _token = "";
+
+        if (authToken) _token = authToken
+        else if (token) _token = token
+
+        AxiosClient.get(`/tasks?limit=${query.limit}&page=${query.page}&orderby=${query.orderBy}&order=${query.order}`, generateConfig(_token)).then(({ data }) => {
             dispatch(actionStopReloadTask())
             result?.(true, data)
         }).catch(({ response: { data } }) => {
@@ -60,7 +69,12 @@ const useTasks = () => {
     }
 
     const getAllTasksByProjectID = (token: null | string = null, projectid:number, query: QueryTaskType, result:null | ResultHandleType=null) => {
-        AxiosClient.get(`projects/${projectid}/tasks?limit=${query.limit}&page=${query.page}&orderby=${query.orderBy}&order=${query.order}`, generateConfig(token? token : authToken)).then(({ data }) => {
+        let _token = "";
+
+        if (authToken) _token = authToken
+        else if (token) _token = token
+
+        AxiosClient.get(`projects/${projectid}/tasks?limit=${query.limit}&page=${query.page}&orderby=${query.orderBy}&order=${query.order}`, generateConfig(_token)).then(({ data }) => {
             dispatch(actionStopReloadTask())
             result?.(true, data)
         }).catch(({ response: { data } }) => {
@@ -70,7 +84,7 @@ const useTasks = () => {
     }
 
     const deleteTask = (id:number, result:null | ResultHandleType=null) => {
-        AxiosClient.delete(`/tasks/${id}`, generateConfig(authToken)).then(() => {
+        AxiosClient.delete(`/tasks/${id}`, generateConfig(authToken || "")).then(() => {
             dispatch(actionReloadTask())
             result?.(true, null)
         }).catch(({ response: { data } }) => {
@@ -79,7 +93,7 @@ const useTasks = () => {
     }
 
     const deleteTaskNoReload = (id:number, result:null | ResultHandleType=null) => {
-        AxiosClient.delete(`/tasks/${id}`, generateConfig(authToken)).then(() => {
+        AxiosClient.delete(`/tasks/${id}`, generateConfig(authToken || "")).then(() => {
             result?.(true, null)
         }).catch(({ response: { data } }) => {
             result?.(false, data)
